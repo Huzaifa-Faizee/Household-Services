@@ -1,14 +1,23 @@
 <div>
-    <input placeholder="email" v-model="email" />
-    <input placeholder="password" v-model="password" />
-    <input placeholder="role" v-model="role" />
-    <select name="role" v-model="role">
-        <option value="user">User</option>
-        <option value="service_provider">Service Provider</option>
-    </select>
-    <div v-if="role=='service_provider'">
-        Hello
-    </div>
-    <button @click="submitLogin"> Register </button>
-
+    <h1>View Services</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="service in services">
+            <tr>{{service.name}}</tr>
+            <tr>{{service.desc}}</tr>
+            <tr><button>Delete</button></tr>
+            </tr>
+        </tbody>
+    </table>
+    <h1>Create Services</h1>
+    <input type="text" name="name" v-model="name">
+    <input type="text" name="desc" v-model="desc">
+    <button @click="addNewService">Add</button>
 </div>

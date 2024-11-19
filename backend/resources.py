@@ -15,9 +15,28 @@ blog_fields = {
     'timestamp' : fields.DateTime,
 }
 service_fields={
-    
+    'id':fields.Integer,
+    'name':fields.String,
+    'description':fields.String,
 }
 
+class Service(Resource):
+    @marshal_with(service_fields)
+    def get(self):
+        services=Services.query.all()
+        return services
+
+    @auth_required('token')
+    def post(self):
+        data=request.get_json()
+        name=data.get('name')
+        desc=data.get('desc')
+        service=Services(name=name, description=desc)
+        db.session.add(service)
+        db.session.commit()
+        return jsonify({'message' : 'blog created'})
+
+api.add_resource(Service,'/services')
 # class BlogAPI(Resource):
 
 #     @marshal_with(blog_fields)
