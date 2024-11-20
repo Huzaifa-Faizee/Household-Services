@@ -35,6 +35,19 @@ class Service(Resource):
         db.session.add(service)
         db.session.commit()
         return jsonify({'message' : 'blog created'})
+    
+    @auth_required('token')
+    def delete(self):
+        data=request.get_json()
+        service_id=data.get('id')
+        if not service_id:
+            return {"message":"Service Id not been provided"},400
+        
+        service=Services.query.get(service_id)
+        db.session.delete(service)
+        db.session.commit()
+
+        return {"message": "Service deleted successfully"}, 200
 
 api.add_resource(Service,'/services')
 # class BlogAPI(Resource):

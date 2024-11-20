@@ -14,7 +14,7 @@ export default {
             <tr v-for="service in services">
             <td>{{service.name}}</td>
             <td>{{service.description}}</td>
-            <td><button>Delete</button></td>
+            <td><button @click="deleteService(service)">Delete</button></td>
             </tr>
         </tbody>
     </table>
@@ -31,16 +31,8 @@ export default {
       services: [],
     };
   },
-  async mounted() {
-    const res = await fetch(location.origin + "/api/services", {
-      headers: {
-        // "Authentication-Token": this.$store.state.auth_token,
-      },
-    });
-    if (res.ok) {
-      let data = await res.json();
-      this.services = data;
-    }
+  mounted() {
+    this.getServices();
   },
   methods: {
     async addNewService() {
@@ -59,6 +51,41 @@ export default {
       if (res.ok) {
         let data = await res.json();
         console.log(data);
+        this.getServices();
+        this.name = null;
+        this.desc = null;
+      }
+    },
+    async getServices() {
+      const res = await fetch(location.origin + "/api/services", {
+        headers: {
+          // "Authentication-Token": this.$store.state.auth_token,
+        },
+      });
+      if (res.ok) {
+        let data = await res.json();
+        this.services = data;
+        console.log(this.services);
+      }
+    },
+    async deleteService(service) {
+      let serviceData = {
+        id: service.id,
+      };
+      console.log(serviceData);
+      
+      const res = await fetch(location.origin + "/api/services", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authentication-Token": this.$store.state.auth_token,
+        },
+        body: JSON.stringify(serviceData),
+      });
+      if (res.ok) {
+        let data = await res.json();
+        console.log(data);
+        this.getServices();
       }
     },
   },

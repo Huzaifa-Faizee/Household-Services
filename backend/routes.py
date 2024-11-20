@@ -1,6 +1,6 @@
 from flask import current_app as app, jsonify, render_template,  request
 from flask_security import auth_required, verify_password, hash_password
-from backend.models import db
+from backend.models import db,User,Serviceproviders
 
 datastore = app.security.datastore
 
@@ -29,14 +29,15 @@ def login():
         return jsonify({"message" : "invalid email"}), 404
     
     if verify_password(password, user.password):
-        return jsonify({'token' : user.get_auth_token(), 'email' : user.email, 'role' : user.roles[0].name, 'id' : user.id})
+        return jsonify({'token' : user.get_auth_token(), 'email' : user.email, 'role' : user.roles[0].name, 'id' : user.id,'name':user.name})
     
     return jsonify({'message' : 'password wrong'}), 400
 
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
-
+    print(data)
+    name=data.get('name')
     email = data.get('email')
     password = data.get('password')
     role = data.get('role')
@@ -50,8 +51,19 @@ def register():
         return jsonify({"message" : "user already exists"}), 404
 
     try :
-        datastore.create_user(email = email, password = hash_password(password), roles = [role], active = True)
+        datastore.create_user(email = email, password = hash_password(password), roles = [role], active = True, name = name)
         db.session.commit()
+        if(role=='service_provider'):
+            print("hello")
+            service_id=data.get('service_id')
+            business_name=data.get('business_name')
+            experience=data.get('experience')
+            address=data.get('address')
+            user_data=User.query.filter_by(email=email).first()
+            print(user_data.id)
+            provider_new=Serviceproviders(service_id=service_id,user_id=user_data.id,address=address,experience=experience,business_name=business_name)
+            db.session.add(provider_new)
+            db.session.commit()
         return jsonify({"message" : "user created"}), 200
     except:
         db.session.rollback()
