@@ -1,7 +1,7 @@
 from flask import current_app as app, jsonify, render_template,  request
 from flask_security import auth_required, verify_password, hash_password
 from backend.models import db,User,Serviceproviders
-
+import os
 datastore = app.security.datastore
 
 @app.route('/', methods=['GET'])
@@ -36,13 +36,12 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
-    print(data)
     name=data.get('name')
     email = data.get('email')
     password = data.get('password')
     role = data.get('role')
 
-    if not email or not password or role not in ['admin', 'user','service_provider']:
+    if not email or not password or role not in ['admin', 'user']:
         return jsonify({"message" : "invalid inputs"}), 404
     
     user = datastore.find_user(email = email)
@@ -53,17 +52,43 @@ def register():
     try :
         datastore.create_user(email = email, password = hash_password(password), roles = [role], active = True, name = name)
         db.session.commit()
-        if(role=='service_provider'):
-            print("hello")
-            service_id=data.get('service_id')
-            business_name=data.get('business_name')
-            experience=data.get('experience')
-            address=data.get('address')
-            user_data=User.query.filter_by(email=email).first()
-            print(user_data.id)
-            provider_new=Serviceproviders(service_id=service_id,user_id=user_data.id,address=address,experience=experience,business_name=business_name)
-            db.session.add(provider_new)
-            db.session.commit()
+        return jsonify({"message" : "user created"}), 200
+    except:
+        db.session.rollback()
+        return jsonify({"message" : "error creating user"}), 400
+    
+@app.route('/registerProfessional', methods=['POST'])
+def registerProfessional():
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    role = request.form.get('role')
+    service_id = request.form.get('service_id')
+    business_name = request.form.get('business_name')
+    experience = request.form.get('experience')
+    address = request.form.get('address')
+
+    if not email or not password or role not in ['service_provider']:
+        return jsonify({"message" : "invalid inputs"}), 404
+    
+    user = datastore.find_user(email = email)
+
+    if user:
+        return jsonify({"message" : "user already exists"}), 404
+    
+    try :
+        datastore.create_user(email = email, password = hash_password(password), roles = [role], active = True, name = name)
+        db.session.commit()
+        file = request.files.get('file')
+        if file:
+            filename = file.filename
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+        print(f"File saved at: {file_path}")
+        user_data=User.query.filter_by(email=email).first()
+        provider_new=Serviceproviders(service_id=service_id,user_id=user_data.id,address=address,experience=experience,business_name=business_name,uploaded_file=filename)
+        db.session.add(provider_new)
+        db.session.commit()
         return jsonify({"message" : "user created"}), 200
     except:
         db.session.rollback()

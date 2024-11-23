@@ -1,14 +1,21 @@
-
 import AdminHome from "../pages/admin/AdminHome.js";
+import AdminSearch from "../pages/admin/AdminSearch.js";
+import AdminSummary from "../pages/admin/AdminSummary.js";
+import Professionals from "../pages/admin/Professionals.js";
+import Requests from "../pages/admin/Requests.js";
 import Services from "../pages/admin/Services.js";
+import Users from "../pages/admin/Users.js";
 import Home from "../pages/Home.js";
 import Login from "../pages/Login.js";
 import Register from "../pages/Register.js";
-import store from './store.js'
+import RegisterProfessional from "../pages/RegisterProfessional.js";
+import store from "./store.js";
 const routes = [
   { path: "/", component: Home },
   { path: "/login", component: Login },
   { path: "/register", component: Register },
+  { path: "/registerProfessional", component: RegisterProfessional },
+  // Admin Routes
   {
     path: "/admin-home",
     component: AdminHome,
@@ -17,6 +24,31 @@ const routes = [
   {
     path: "/services",
     component: Services,
+    meta: { requiresLogin: true, role: "admin" },
+  },
+  {
+    path: "/users",
+    component: Users,
+    meta: { requiresLogin: true, role: "admin" },
+  },
+  {
+    path: "/professionals",
+    component: Professionals,
+    meta: { requiresLogin: true, role: "admin" },
+  },
+  {
+    path: "/admin-search",
+    component: AdminSearch,
+    meta: { requiresLogin: true, role: "admin" },
+  },
+  {
+    path: "/admin-requests",
+    component: Requests,
+    meta: { requiresLogin: true, role: "admin" },
+  },
+  {
+    path: "/admin-summary",
+    component: AdminSummary,
     meta: { requiresLogin: true, role: "admin" },
   },
 ];
@@ -28,7 +60,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresLogin)) {
     console.log(store.state.loggedIn);
-    
+
     if (!store.state.loggedIn) {
       next({ path: "/login" });
     } else if (to.meta.role && to.meta.role != store.state.role) {

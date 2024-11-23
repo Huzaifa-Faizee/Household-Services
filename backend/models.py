@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     fs_uniquifier = db.Column(db.String, unique = True, nullable = False) # flask-security specific
     active = db.Column(db.Boolean, default = True) # flask-security specific
     roles = db.Relationship('Role', backref = 'bearers', secondary='user_roles')
+    service_providers = db.relationship('Serviceproviders', backref='user')
 
 class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer, primary_key = True)
@@ -31,13 +32,17 @@ class Serviceproviders(db.Model):
     business_name=db.Column(db.String,nullable = False)
     experience=db.Column(db.String,nullable = False)
     address=db.Column(db.String,nullable = False)
+    uploaded_file=db.Column(db.String,nullable = False)
+    status=db.Column(db.String,nullable = False,default="waiting")
     date_created=db.Column(db.Date, default=date.today)
 
 class Services(db.Model):
     id=db.Column(db.Integer, primary_key = True)
     name=db.Column(db.String,unique=True,nullable = False)
     description=db.Column(db.String,nullable = False)
-    
+    base_price=db.Column(db.Integer,nullable = False)
+    service_providers = db.relationship('Serviceproviders', backref='service')
+
 class ServiceRequests(db.Model):
     id=db.Column(db.Integer, primary_key = True)
     user_id=db.Column(db.Integer,db.ForeignKey('user.id'))

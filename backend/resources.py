@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_security import auth_required, current_user
-from backend.models import Services, db
+from backend.models import Services,User ,Role, db,Serviceproviders
 
 
 api = Api(prefix='/api')
@@ -18,8 +18,26 @@ service_fields={
     'id':fields.Integer,
     'name':fields.String,
     'description':fields.String,
+    'base_price':fields.Integer
+}
+user_fields={
+    'name':fields.String,
+    'email':fields.String,
 }
 
+professional_fields={
+    'id':fields.Integer,
+    'user_id':fields.Integer,
+    'service_id':fields.Integer,
+    'user':fields.Nested(user_fields),
+    'service':fields.Nested(service_fields),
+    'business_name':fields.String,
+    'experience':fields.String,
+    'address':fields.String,
+    'uploaded_file':fields.String,
+    'status':fields.String,
+    'date_created':fields.String,
+}
 class Service(Resource):
     @marshal_with(service_fields)
     def get(self):
@@ -31,7 +49,8 @@ class Service(Resource):
         data=request.get_json()
         name=data.get('name')
         desc=data.get('desc')
-        service=Services(name=name, description=desc)
+        base_price=data.get('base_price')
+        service=Services(name=name, description=desc,base_price=base_price)
         db.session.add(service)
         db.session.commit()
         return jsonify({'message' : 'blog created'})
@@ -50,6 +69,22 @@ class Service(Resource):
         return {"message": "Service deleted successfully"}, 200
 
 api.add_resource(Service,'/services')
+
+class Users(Resource):
+    @marshal_with(user_fields)
+    @auth_required('token')
+    def get(self):
+        users = User.query.join(User.roles).filter(Role.name == 'user').all()
+        return users
+api.add_resource(Users,'/users')
+
+class Professionals(Resource):
+    @marshal_with(professional_fields)
+    @auth_required('token')
+    def get(self):
+        professionals = Serviceproviders.query.all()
+        return professionals
+api.add_resource(Professionals,'/professionals')
 # class BlogAPI(Resource):
 
 #     @marshal_with(blog_fields)

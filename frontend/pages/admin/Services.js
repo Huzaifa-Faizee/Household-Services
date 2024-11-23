@@ -7,6 +7,7 @@ export default {
             <tr>
                 <th>Name</th>
                 <th>Description</th>
+                <th>Base Price</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -14,6 +15,7 @@ export default {
             <tr v-for="service in services">
             <td>{{service.name}}</td>
             <td>{{service.description}}</td>
+            <td>{{service.base_price}}</td>
             <td><button @click="deleteService(service)">Delete</button></td>
             </tr>
         </tbody>
@@ -21,6 +23,7 @@ export default {
     <h1>Create Services</h1>
     <input type="text" name="name" v-model="name">
     <input type="text" name="desc" v-model="desc">
+    <input type="number" name="base-price" v-model="base_price">
     <button @click="addNewService">Add</button>
   </div>
     `,
@@ -28,6 +31,7 @@ export default {
     return {
       name: null,
       desc: null,
+      base_price: null,
       services: [],
     };
   },
@@ -39,6 +43,7 @@ export default {
       let serviceData = {
         name: this.name,
         desc: this.desc,
+        base_price: this.base_price,
       };
       const res = await fetch(location.origin + "/api/services", {
         method: "POST",
@@ -52,8 +57,7 @@ export default {
         let data = await res.json();
         console.log(data);
         this.getServices();
-        this.name = null;
-        this.desc = null;
+        this.initialiseVariables();
       }
     },
     async getServices() {
@@ -73,7 +77,7 @@ export default {
         id: service.id,
       };
       console.log(serviceData);
-      
+
       const res = await fetch(location.origin + "/api/services", {
         method: "DELETE",
         headers: {
@@ -87,6 +91,11 @@ export default {
         console.log(data);
         this.getServices();
       }
+    },
+    initialiseVariables() {
+      this.name = null;
+      this.desc = null;
+      this.base_price = null;
     },
   },
 };
