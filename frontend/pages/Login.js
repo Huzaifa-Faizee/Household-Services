@@ -34,8 +34,8 @@ export default {
         const data = await res.json();
         console.log(data);
         localStorage.setItem("user", JSON.stringify(data));
-        this.$store.commit("setUser");
         if (data.role == "admin") {
+          this.$store.commit("setUser");
           this.$router.push("/admin-home");
         } else if (data.role == "service_provider") {
           this.handleProfessionalLogin(data);
@@ -48,6 +48,7 @@ export default {
       } else if ((data.status == "rejected")) {
         this.setAlert("Your account application was rejected.", "alert-danger");
       } else if ((data.status == "accepted")) {
+        this.$store.commit("setUser");
         this.$router.push("/professional-home");
       }
     },
