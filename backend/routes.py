@@ -1,4 +1,4 @@
-from flask import current_app as app, jsonify, render_template,  request
+from flask import current_app as app, jsonify, render_template,  request, send_from_directory
 from flask_security import auth_required, verify_password, hash_password
 from backend.models import db,User,Serviceproviders
 import os
@@ -29,7 +29,11 @@ def login():
         return jsonify({"message" : "invalid email"}), 404
     
     if verify_password(password, user.password):
-        return jsonify({'token' : user.get_auth_token(), 'email' : user.email, 'role' : user.roles[0].name, 'id' : user.id,'name':user.name})
+        if user.roles[0].name == "service_provider":
+            return jsonify({'token' : user.get_auth_token(), 'email' : user.email, 'role' : user.roles[0].name, 'id' : user.id,'name':user.name,'status':user.service_providers[0].status})
+        else:
+            return jsonify({'token' : user.get_auth_token(), 'email' : user.email, 'role' : user.roles[0].name, 'id' : user.id,'name':user.name})
+
     
     return jsonify({'message' : 'password wrong'}), 400
 
@@ -93,3 +97,7 @@ def registerProfessional():
     except:
         db.session.rollback()
         return jsonify({"message" : "error creating user"}), 400
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory('uploads', filename)

@@ -84,6 +84,16 @@ class Professionals(Resource):
     def get(self):
         professionals = Serviceproviders.query.all()
         return professionals
+    
+    @auth_required('token')
+    def post(self):
+        data=request.get_json()
+        professional_id=data.get('id')
+        status=data.get('status')
+        professional = Serviceproviders.query.filter_by(id=professional_id).first()
+        professional.status=status
+        db.session.commit()
+
 api.add_resource(Professionals,'/professionals')
 # class BlogAPI(Resource):
 

@@ -25,6 +25,13 @@ class UserRoles(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
+class Services(db.Model):
+    id=db.Column(db.Integer, primary_key = True)
+    name=db.Column(db.String,unique=True,nullable = False)
+    description=db.Column(db.String,nullable = False)
+    base_price=db.Column(db.Integer,nullable = False)
+    service_providers = db.relationship('Serviceproviders', backref='service')
+
 class Serviceproviders(db.Model):
     id=db.Column(db.Integer, primary_key = True)
     user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
@@ -35,13 +42,6 @@ class Serviceproviders(db.Model):
     uploaded_file=db.Column(db.String,nullable = False)
     status=db.Column(db.String,nullable = False,default="waiting")
     date_created=db.Column(db.Date, default=date.today)
-
-class Services(db.Model):
-    id=db.Column(db.Integer, primary_key = True)
-    name=db.Column(db.String,unique=True,nullable = False)
-    description=db.Column(db.String,nullable = False)
-    base_price=db.Column(db.Integer,nullable = False)
-    service_providers = db.relationship('Serviceproviders', backref='service')
 
 class ServiceRequests(db.Model):
     id=db.Column(db.Integer, primary_key = True)
