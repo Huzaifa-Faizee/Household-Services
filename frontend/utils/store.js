@@ -1,11 +1,12 @@
 const store = new Vuex.Store({
   state: {
-    // like data
     auth_token: null,
     role: null,
     loggedIn: false,
     user_id: null,
     name: null,
+    currentService: null, //for user dashboard only 
+    currentProfessional:null, //for user dashboard only 
   },
   mutations: {
     // functions that change state

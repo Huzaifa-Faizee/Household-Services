@@ -10,6 +10,8 @@ import Login from "../pages/Login.js";
 import Register from "../pages/Register.js";
 import RegisterProfessional from "../pages/RegisterProfessional.js";
 import ProfessionalHome from "../pages/service-provider/ProfessionalHome.js";
+import IndividualService from "../pages/user/IndividualService.js";
+import UserHome from "../pages/user/UserHome.js";
 import store from "./store.js";
 const routes = [
   { path: "/", component: Home },
@@ -57,6 +59,19 @@ const routes = [
     path: "/professional-home",
     component: ProfessionalHome,
     meta: { requiresLogin: true, role: "service_provider" },
+  },
+
+  // User Routes
+  {
+    path: "/user-home",
+    component: UserHome,
+    meta: { requiresLogin: true, role: "user" },
+  },
+  {
+    path: "/individual-service/:id",
+    component: IndividualService,
+    props: true,
+    meta: { requiresLogin: true, role: "user" },
   },
 ];
 

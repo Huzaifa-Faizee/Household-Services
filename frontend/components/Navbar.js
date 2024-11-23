@@ -6,6 +6,7 @@ export default {
             <a class="navbar-brand" v-if="!$store.state.loggedIn" href="#">HomeCare</a>
             <a class="navbar-brand" v-if="$store.state.loggedIn && $store.state.role == 'admin'" href="#">Admin Dashboard -  Hello {{$store.state.name}}</a>
             <a class="navbar-brand" v-if="$store.state.loggedIn && $store.state.role == 'service_provider'" href="#">Professional Dashboard -  Hello {{$store.state.name}}</a>
+            <a class="navbar-brand" v-if="$store.state.loggedIn && $store.state.role == 'user'" href="#">User Dashboard -  Hello {{$store.state.name}}</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -46,6 +47,10 @@ export default {
                     <!--Professional Navbar-->
                     <li class="nav-item" v-if="$store.state.loggedIn && $store.state.role == 'service_provider'">
                         <a class="nav-link"><router-link to='/professional-home'>Home</router-link></a>
+                    </li>
+                    <!--User Navbar-->
+                    <li class="nav-item" v-if="$store.state.loggedIn && $store.state.role == 'user'">
+                        <a class="nav-link"><router-link to='/user-home'>Home</router-link></a>
                     </li>
                     <li class="nav-item" v-if="$store.state.loggedIn">
                         <button class="btn btn-secondary" @click="logout">Logout</button>

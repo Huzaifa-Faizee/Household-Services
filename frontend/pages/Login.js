@@ -39,15 +39,18 @@ export default {
           this.$router.push("/admin-home");
         } else if (data.role == "service_provider") {
           this.handleProfessionalLogin(data);
+        } else if (data.role == "user") {
+          this.$store.commit("setUser");
+          this.$router.push("/user-home");
         }
       }
     },
     handleProfessionalLogin(data) {
-      if ((data.status == "waiting")) {
+      if (data.status == "waiting") {
         this.setAlert("Your account is still under review.", "alert-warning");
-      } else if ((data.status == "rejected")) {
+      } else if (data.status == "rejected") {
         this.setAlert("Your account application was rejected.", "alert-danger");
-      } else if ((data.status == "accepted")) {
+      } else if (data.status == "accepted") {
         this.$store.commit("setUser");
         this.$router.push("/professional-home");
       }

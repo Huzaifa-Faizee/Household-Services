@@ -76,6 +76,7 @@ class Users(Resource):
     def get(self):
         users = User.query.join(User.roles).filter(Role.name == 'user').all()
         return users
+    
 api.add_resource(Users,'/users')
 
 class Professionals(Resource):
@@ -95,6 +96,15 @@ class Professionals(Resource):
         db.session.commit()
 
 api.add_resource(Professionals,'/professionals')
+
+class ProfessionalList(Resource):
+        @marshal_with(professional_fields)
+        @auth_required('token')
+        def get(self, service_id):
+            professionals = Serviceproviders.query.filter_by(service_id=service_id).all()
+            return professionals
+        
+api.add_resource(ProfessionalList,'/professionals/<int:service_id>')
 # class BlogAPI(Resource):
 
 #     @marshal_with(blog_fields)
