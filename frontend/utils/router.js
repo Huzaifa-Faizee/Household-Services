@@ -68,9 +68,8 @@ const routes = [
     meta: { requiresLogin: true, role: "user" },
   },
   {
-    path: "/individual-service/:id",
+    path: "/individual-service",
     component: IndividualService,
-    props: true,
     meta: { requiresLogin: true, role: "user" },
   },
 ];

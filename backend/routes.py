@@ -71,7 +71,7 @@ def registerProfessional():
     business_name = request.form.get('business_name')
     experience = request.form.get('experience')
     address = request.form.get('address')
-
+    price = request.form.get('price')
     if not email or not password or role not in ['service_provider']:
         return jsonify({"message" : "invalid inputs"}), 404
     
@@ -90,7 +90,7 @@ def registerProfessional():
             file.save(file_path)
         print(f"File saved at: {file_path}")
         user_data=User.query.filter_by(email=email).first()
-        provider_new=Serviceproviders(service_id=service_id,user_id=user_data.id,address=address,experience=experience,business_name=business_name,uploaded_file=filename)
+        provider_new=Serviceproviders(service_id=service_id,user_id=user_data.id,address=address,experience=experience,business_name=business_name,uploaded_file=filename,price=price)
         db.session.add(provider_new)
         db.session.commit()
         return jsonify({"message" : "user created"}), 200

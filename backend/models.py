@@ -40,6 +40,8 @@ class Serviceproviders(db.Model):
     experience=db.Column(db.String,nullable = False)
     address=db.Column(db.String,nullable = False)
     uploaded_file=db.Column(db.String,nullable = False)
+    service_description=db.Column(db.String,nullable=False,default="We Provide Services")
+    price=db.Column(db.Integer,default=0)
     status=db.Column(db.String,nullable = False,default="waiting")
     date_created=db.Column(db.Date, default=date.today)
 

@@ -37,6 +37,8 @@ professional_fields={
     'uploaded_file':fields.String,
     'status':fields.String,
     'date_created':fields.String,
+    'price':fields.Integer,
+    'service_description':fields.String
 }
 class Service(Resource):
     @marshal_with(service_fields)
@@ -79,6 +81,7 @@ class Users(Resource):
     
 api.add_resource(Users,'/users')
 
+# This class deals with admin actions
 class Professionals(Resource):
     @marshal_with(professional_fields)
     @auth_required('token')
@@ -97,14 +100,34 @@ class Professionals(Resource):
 
 api.add_resource(Professionals,'/professionals')
 
+# This class deals with user actions do fetch via service id
 class ProfessionalList(Resource):
         @marshal_with(professional_fields)
         @auth_required('token')
         def get(self, service_id):
-            professionals = Serviceproviders.query.filter_by(service_id=service_id).all()
+            professionals = Serviceproviders.query.filter_by(service_id=service_id,status="accepted").all()
             return professionals
         
 api.add_resource(ProfessionalList,'/professionals/<int:service_id>')
+
+# This class deals with professional actions to perform actions limited to the professional
+class IndividualProfessional(Resource):
+        @marshal_with(professional_fields)
+        @auth_required('token')
+        def get(self, user_id):
+             return Serviceproviders.query.filter_by(user_id=user_id).first()
+
+        @auth_required('token')
+        def post(self, user_id):
+             data=request.get_json()
+             prof=Serviceproviders.query.filter_by(user_id=user_id).first()
+             prof.business_name = data.get("business_name")
+             prof.experience = data.get("experience")
+             prof.address = data.get("address")
+             prof.service_description = data.get("service_description")
+             prof.price = data.get("price")
+             db.session.commit()
+api.add_resource(IndividualProfessional,'/invidualProfessional/<int:user_id>')
 # class BlogAPI(Resource):
 
 #     @marshal_with(blog_fields)

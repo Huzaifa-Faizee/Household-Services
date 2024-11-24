@@ -5,8 +5,8 @@ export default {
     <input placeholder="name"  v-model="name"/>  
     <input placeholder="email"  v-model="email"/>  
     <input placeholder="password"  v-model="password"/>
-    <select name="service" v-model="service_id">
-        <option v-for="service in services" :value="service.id">{{service.name}}</option>
+    <select name="service" v-model="service_data">
+        <option v-for="service in services" :value="service">{{service.name}}</option>
     </select>
     <input placeholder="business_name"  v-model="business_name"/>  
     <input placeholder="experience"  v-model="experience"/>  
@@ -21,7 +21,7 @@ export default {
       password: null,
       role: "service_provider",
       services: [],
-      service_id: null,
+      service_data: null,
       experience: null,
       name: null,
       business_name: null,
@@ -52,14 +52,15 @@ export default {
     },
     async submitRegister() {
       const formData = new FormData();
-      formData.append('name',this.name)
-      formData.append('email',this.email)
-      formData.append('password',this.password)
-      formData.append('role',this.role)
-      formData.append('service_id',this.service_id)
-      formData.append('business_name',this.business_name)
-      formData.append('experience',this.experience)
-      formData.append('address',this.address)
+      formData.append("name", this.name);
+      formData.append("email", this.email);
+      formData.append("password", this.password);
+      formData.append("role", this.role);
+      formData.append("service_id", this.service_data.id);
+      formData.append("price", this.service_data.base_price);
+      formData.append("business_name", this.business_name);
+      formData.append("experience", this.experience);
+      formData.append("address", this.address);
       if (this.selectedFile) {
         formData.append("file", this.selectedFile); // Append the file
       }

@@ -6,7 +6,7 @@ export default {
                 <div class="card-body">
                     <h5 class="card-title">{{service.name}}</h5>
                     <p class="card-text">{{service.description}}</p>
-                    <a href="#" class="btn btn-primary" @click="viewProfessional(service.id)">View Professionals</a>
+                    <a href="#" class="btn btn-primary" @click="viewProfessional(service)">View Professionals</a>
                 </div>
             </div>
         </div>
@@ -32,8 +32,9 @@ export default {
         console.log(this.services);
       }
     },
-    viewProfessional(id) {
-      this.$router.push("/individual-service/"+id);
+    viewProfessional(service) {
+      localStorage.setItem("currentService", JSON.stringify(service));
+      this.$router.push("/individual-service");
     },
   },
 };
