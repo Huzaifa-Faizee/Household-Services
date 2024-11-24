@@ -153,7 +153,6 @@ export default {
       });
       if (res.ok) {
         let data = await res.json();
-        console.log(data);
         this.initialiseVariables();
         this.getProfessionalData();
       }

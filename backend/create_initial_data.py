@@ -13,9 +13,9 @@ with app.app_context():
 
     if (not userdatastore.find_user(email = 'admin@mail.com')):
         userdatastore.create_user(email = 'admin@mail.com', password = hash_password('admin123'), roles = ['admin'],name='admin' )
-    if (not userdatastore.find_user(email = 'user@mail.com')):
-        userdatastore.create_user(email = 'user@mail.com', password = hash_password('user123'), roles = ['user'], name = 'user' ) 
-    if (not userdatastore.find_user(email = 'provider@mail.com')):
-        userdatastore.create_user(email = 'provider@mail.com', password = hash_password('provider123'), roles = ['service_provider'],name='provider' ) 
+    # if (not userdatastore.find_user(email = 'user@mail.com')):
+    #     userdatastore.create_user(email = 'user@mail.com', password = hash_password('user123'), roles = ['user'], name = 'user' ) 
+    # if (not userdatastore.find_user(email = 'provider@mail.com')):
+    #     userdatastore.create_user(email = 'provider@mail.com', password = hash_password('provider123'), roles = ['service_provider'],name='provider' ) 
 
     db.session.commit()

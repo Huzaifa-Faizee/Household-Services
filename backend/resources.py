@@ -1,28 +1,28 @@
+from datetime import datetime
 from flask import jsonify, request
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_security import auth_required, current_user
-from backend.models import Services,User ,Role, db,Serviceproviders
+from backend.models import Services,User ,Role, db,Serviceproviders,Customers,ServiceRequests
 
 
 api = Api(prefix='/api')
 
-blog_fields = {
-    'id' : fields.Integer,
-    'title' : fields.String,
-    'caption' : fields.String,
-    'image_url' : fields.String,
-    'user_id' : fields.Integer,
-    'timestamp' : fields.DateTime,
-}
 service_fields={
     'id':fields.Integer,
     'name':fields.String,
     'description':fields.String,
     'base_price':fields.Integer
 }
+customer_fields={
+     'id':fields.Integer,
+     'user_id':fields.Integer,
+     'status':fields.String,
+}
 user_fields={
+    'id':fields.Integer,
     'name':fields.String,
     'email':fields.String,
+    'customer':fields.Nested(customer_fields)
 }
 
 professional_fields={
@@ -39,6 +39,18 @@ professional_fields={
     'date_created':fields.String,
     'price':fields.Integer,
     'service_description':fields.String
+}
+
+request_fields={
+     'id':fields.Integer,
+     'user_id':fields.Integer,
+     'service_id':fields.Integer,
+     'date_requested':fields.String,
+     'user_address':fields.String,
+     'status':fields.String,
+     'user':fields.Nested(user_fields),
+     'service_provider':fields.Nested(professional_fields),
+     'service':fields.Nested(service_fields)
 }
 class Service(Resource):
     @marshal_with(service_fields)
@@ -78,6 +90,13 @@ class Users(Resource):
     def get(self):
         users = User.query.join(User.roles).filter(Role.name == 'user').all()
         return users
+    
+    @auth_required('token')
+    def post(self):
+         data=request.get_json()
+         customer=Customers.query.filter_by(user_id=data.get('user_id')).first()
+         customer.status=data.get('status')
+         db.session.commit()
     
 api.add_resource(Users,'/users')
 
@@ -128,54 +147,52 @@ class IndividualProfessional(Resource):
              prof.price = data.get("price")
              db.session.commit()
 api.add_resource(IndividualProfessional,'/invidualProfessional/<int:user_id>')
-# class BlogAPI(Resource):
 
-#     @marshal_with(blog_fields)
-#     @auth_required('token')
-#     def get(self, blog_id):
-#         blog = Blog.query.get(blog_id)
+class NewRequests(Resource):
+     @auth_required('token')
+     def post(self):
+        data=request.get_json()
+        new_request=ServiceRequests(
+               user_id=data.get('user_id'),
+               service_provider_id=data.get('service_provider_id'),
+               service_id=data.get('service_id'),
+               date_requested=datetime.strptime(data.get('date_requested'), "%Y-%m-%d").date(),
+               user_address=data.get('user_address'),
+        )
+        db.session.add(new_request)
+        db.session.commit()
+        return 200
+     
+api.add_resource(NewRequests,'/requests')
 
-#         if not blog:
-#             return {"message" : "not found"}, 404
-#         return blog
-    
-#     @auth_required('token')
-#     def delete(self, blog_id):
+class RequestsForService(Resource):
+    @marshal_with(request_fields)
+    @auth_required('token')
+    def get(self,service_id,user_id):
+        requests=ServiceRequests.query.filter_by(user_id=user_id,service_id=service_id).all()
+        return requests
 
-#         blog = Blog.query.get(blog_id)
+api.add_resource(RequestsForService,'/service-requests/<int:service_id>/<int:user_id>')
 
-#         if not blog:
-#             return {"message" : "not found"}, 404
-        
-#         if blog.user_id == current_user.id:
+class RequestsForProfessional(Resource):
+     @marshal_with(request_fields)
+     @auth_required('token')
+     def get(self,professional_id):
+           prof=Serviceproviders.query.filter_by(user_id=professional_id).first()
+           return ServiceRequests.query.filter_by(service_provider_id=prof.id).all()
 
-#             db.session.delete(blog)
-#             db.session.commit()
-#         else:
-#             return {"message" : "not valid user"}, 403
-        
+     def post(self,professional_id):
+          data=request.get_json()
+          s_req=ServiceRequests.query.filter_by(id=data.get('id')).first()
+          s_req.status=data.get('status')
+          db.session.commit()
 
-# class BlogListAPI(Resource):
+api.add_resource(RequestsForProfessional,'/professional-requests/<int:professional_id>')
 
-#     @marshal_with(blog_fields)
-#     @auth_required('token')
-#     def get(self ):
-#         blogs = Blog.query.all()
-#         return blogs
-    
-#     @auth_required('token')
-#     def post(self):
-#         data = request.get_json()
-#         title = data.get('title')
-#         caption = data.get('caption')
-#         image_url = data.get('image_url')
+class RequestsForUser(Resource):
+     @marshal_with(request_fields)
+     @auth_required('token')
+     def get(self,user_id):
+          return ServiceRequests.query.filter_by(user_id=user_id).all()
 
-#         blog = Blog(title = title, caption = caption, image_url = image_url, user_id = current_user.id)
-
-#         db.session.add(blog)
-#         db.session.commit()
-#         return jsonify({'message' : 'blog created'})
-
-    
-# api.add_resource(BlogAPI, '/blogs/<int:blog_id>')
-# api.add_resource(BlogListAPI,'/blogs')
+api.add_resource(RequestsForUser,'/user-requests/<int:user_id>')

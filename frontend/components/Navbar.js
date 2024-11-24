@@ -48,9 +48,15 @@ export default {
                     <li class="nav-item" v-if="$store.state.loggedIn && $store.state.role == 'service_provider'">
                         <a class="nav-link"><router-link to='/professional-home'>Home</router-link></a>
                     </li>
+                    <li class="nav-item" v-if="$store.state.loggedIn && $store.state.role == 'service_provider'">
+                        <a class="nav-link"><router-link to='/professional-requests'>Requests</router-link></a>
+                    </li>
                     <!--User Navbar-->
                     <li class="nav-item" v-if="$store.state.loggedIn && $store.state.role == 'user'">
                         <a class="nav-link"><router-link to='/user-home'>Home</router-link></a>
+                    </li>
+                    <li class="nav-item" v-if="$store.state.loggedIn && $store.state.role == 'user'">
+                        <a class="nav-link"><router-link to='/user-requests'>Requests</router-link></a>
                     </li>
                     <li class="nav-item" v-if="$store.state.loggedIn">
                         <button class="btn btn-secondary" @click="logout">Logout</button>

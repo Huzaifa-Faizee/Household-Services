@@ -17,21 +17,6 @@ export default {
     };
   },
   methods: {
-    async onRoleChange() {
-      if (this.role == "service_provider") {
-        const res = await fetch(location.origin + "/api/services", {
-          headers: {
-            // "Authentication-Token": this.$store.state.auth_token,
-          },
-        });
-        if (res.ok) {
-          let data = await res.json();
-          this.services = data;
-        } else {
-          console.log("Not ok");
-        }
-      }
-    },
 
     async submitRegister() {
       let userData = {
@@ -47,7 +32,7 @@ export default {
       });
       if (res.ok) {
         let data = await res.json();
-        console.log("we are register");
+        console.log("we are registered");
         console.log(data);
       }
     },

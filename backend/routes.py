@@ -1,6 +1,6 @@
 from flask import current_app as app, jsonify, render_template,  request, send_from_directory
 from flask_security import auth_required, verify_password, hash_password
-from backend.models import db,User,Serviceproviders
+from backend.models import db,User,Serviceproviders,Customers
 import os
 datastore = app.security.datastore
 
@@ -31,9 +31,10 @@ def login():
     if verify_password(password, user.password):
         if user.roles[0].name == "service_provider":
             return jsonify({'token' : user.get_auth_token(), 'email' : user.email, 'role' : user.roles[0].name, 'id' : user.id,'name':user.name,'status':user.service_providers[0].status})
+        elif user.roles[0].name == "user":
+            return jsonify({'token' : user.get_auth_token(), 'email' : user.email, 'role' : user.roles[0].name, 'id' : user.id,'name':user.name,'status':user.customer[0].status})
         else:
             return jsonify({'token' : user.get_auth_token(), 'email' : user.email, 'role' : user.roles[0].name, 'id' : user.id,'name':user.name})
-
     
     return jsonify({'message' : 'password wrong'}), 400
 
@@ -55,6 +56,10 @@ def register():
 
     try :
         datastore.create_user(email = email, password = hash_password(password), roles = [role], active = True, name = name)
+        db.session.commit()
+        user_data=User.query.filter_by(email=email).first()
+        customer=Customers(user_id=user_data.id)
+        db.session.add(customer)
         db.session.commit()
         return jsonify({"message" : "user created"}), 200
     except:

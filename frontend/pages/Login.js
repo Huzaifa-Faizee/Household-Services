@@ -40,8 +40,7 @@ export default {
         } else if (data.role == "service_provider") {
           this.handleProfessionalLogin(data);
         } else if (data.role == "user") {
-          this.$store.commit("setUser");
-          this.$router.push("/user-home");
+          this.handleUserLogin(data)
         }
       }
     },
@@ -53,6 +52,14 @@ export default {
       } else if (data.status == "accepted") {
         this.$store.commit("setUser");
         this.$router.push("/professional-home");
+      }
+    },
+    handleUserLogin(data){
+      if(data.status=="active"){
+        this.$store.commit("setUser");
+        this.$router.push("/user-home");
+      }else if(data.status=="blocked"){
+        this.setAlert("Your account has been blocked by admin. Please Contact Admin to login", "alert-danger");
       }
     },
     setAlert(message, alertClass) {
