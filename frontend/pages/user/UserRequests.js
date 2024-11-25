@@ -23,7 +23,7 @@ export default {
                     <td>{{req.service_provider.name}}</td>
                     <td>{{req.date_requested}}</td>
                     <td>{{req.user_address}}</td>
-                    <td><button class="btn btn-warning">Close</button></td>
+                    <td><button class="btn btn-warning" @click="openModal(req)">Close</button></td>
                 </tr>
             </tbody>
         </table>
@@ -77,7 +77,29 @@ export default {
                 </tr>
             </tbody>
         </table>
-        
+        <!-- Modal for Booking -->
+        <div class="modal fade" id="closingModal" tabindex="-1" aria-labelledby="closingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="closingModalLabel">Please Leave a review, before closing the request</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="review" class="form-label">Review</label>
+                  <input type="text" v-model="review" id="review" class="form-control" required />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" @click="closeRequest">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     `,
   data() {
@@ -86,6 +108,8 @@ export default {
       waiting_requests: [],
       other_requests: [],
       model: null,
+      currentRequest: null,
+      review: null,
     };
   },
   mounted() {
@@ -109,6 +133,7 @@ export default {
       if (res.ok) {
         let data = await res.json();
         console.log(data);
+        this.initializeVariables();
         data.forEach((req) => {
           if (req.status == "requested") {
             this.waiting_requests.push(req);
@@ -118,6 +143,35 @@ export default {
             this.other_requests.push(req);
           }
         });
+      }
+    },
+    openModal(req) {
+      this.currentRequest = req;
+      this.modal = new bootstrap.Modal(document.getElementById("closingModal"));
+      this.modal.show();
+    },
+    async closeRequest() {
+      let dataToPass = {
+        request_id: this.currentRequest.id,
+        status: "closed",
+        review: this.review,
+      };
+      const res = await fetch(
+        location.origin + "/api/user-requests/" + this.$store.state.user_id,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authentication-Token": this.$store.state.auth_token,
+          },
+          body: JSON.stringify(dataToPass),
+        }
+      );
+      if (res.ok) {
+        let data = await res.json();
+        console.log(data);
+        this.getRequests();
+        this.modal.hide();
       }
     },
   },

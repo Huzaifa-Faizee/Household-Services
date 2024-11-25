@@ -66,7 +66,7 @@ class ServiceRequests(db.Model):
 
 class Ratings(db.Model):
     id=db.Column(db.Integer, primary_key = True)
-    user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
-    service_provider_id=db.Column(db.Integer,db.ForeignKey('serviceproviders.id'))
+    user_id=db.Column(db.Integer,db.ForeignKey('user.id')) #This the user who puts in the review
+    service_provider_id=db.Column(db.Integer,db.ForeignKey('serviceproviders.id')) #This is the service provider for whom the review has been written
     review=db.Column(db.String,nullable = False)
     user = db.relationship('User', backref='ratings')

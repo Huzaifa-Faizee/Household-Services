@@ -12,6 +12,7 @@ import RegisterProfessional from "../pages/RegisterProfessional.js";
 import ProfessionalHome from "../pages/service-provider/ProfessionalHome.js";
 import ProfessionalRequests from "../pages/service-provider/ProfessionalRequests.js";
 import IndividualService from "../pages/user/IndividualService.js";
+import ProviderProfile from "../pages/user/ProviderProfile.js";
 import UserHome from "../pages/user/UserHome.js";
 import UserRequests from "../pages/user/UserRequests.js";
 import store from "./store.js";
@@ -82,6 +83,11 @@ const routes = [
   {
     path: "/user-requests",
     component: UserRequests,
+    meta: { requiresLogin: true, role: "user" },
+  },
+  {
+    path: "/provider-profile",
+    component: ProviderProfile,
     meta: { requiresLogin: true, role: "user" },
   },
 ];

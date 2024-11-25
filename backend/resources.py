@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import jsonify, request
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_security import auth_required, current_user
-from backend.models import Services,User ,Role, db,Serviceproviders,Customers,ServiceRequests
+from backend.models import Services,User ,Role, db,Serviceproviders,Customers,ServiceRequests,Ratings
 
 
 api = Api(prefix='/api')
@@ -194,5 +194,14 @@ class RequestsForUser(Resource):
      @auth_required('token')
      def get(self,user_id):
           return ServiceRequests.query.filter_by(user_id=user_id).all()
+     
+     @auth_required('token')
+     def post(self,user_id):
+          data=request.get_json()
+          s_req=ServiceRequests.query.filter_by(id=data.get('request_id')).first()
+          s_req.status=data.get('status')
+          review=Ratings(user_id=user_id,service_provider_id=s_req.service_provider_id,review=data.get('review'))
+          db.session.add(review)
+          db.session.commit()
 
 api.add_resource(RequestsForUser,'/user-requests/<int:user_id>')
