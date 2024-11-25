@@ -24,7 +24,7 @@
         </tr>
     </tbody>
 </table> -->
-        <h4>Active Requests</h4>
+<!-- <h4>Active Requests</h4>
         <table>
             <thead>
                 <tr>
@@ -98,4 +98,15 @@
                     <td>{{req.status}}</td>
                 </tr>
             </tbody>
-        </table>
+        </table> -->
+
+<h3>{{professional.business_name}}</h3>
+<p>{{professional.experience}}</p>
+<p>{{professional.address}}</p>
+
+<h4>{{professional.service_description}}</h4>
+<h5>{{professional.price}}</h5>
+
+<ul>
+    <li v-for="review in professional.ratings"></li>
+</ul>

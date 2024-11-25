@@ -25,6 +25,11 @@ user_fields={
     'customer':fields.Nested(customer_fields)
 }
 
+rating_fields={
+     'review':fields.String,
+     'user':fields.Nested(user_fields)
+}
+
 professional_fields={
     'id':fields.Integer,
     'user_id':fields.Integer,
@@ -38,7 +43,8 @@ professional_fields={
     'status':fields.String,
     'date_created':fields.String,
     'price':fields.Integer,
-    'service_description':fields.String
+    'service_description':fields.String,
+    'ratings':fields.Nested(rating_fields)
 }
 
 request_fields={
@@ -205,3 +211,10 @@ class RequestsForUser(Resource):
           db.session.commit()
 
 api.add_resource(RequestsForUser,'/user-requests/<int:user_id>')
+
+class ProfessionalDetailsForUser(Resource):
+     @marshal_with(professional_fields)
+     @auth_required('token')
+     def get(self, id):
+          return Serviceproviders.query.filter_by(id=id).first()
+api.add_resource(ProfessionalDetailsForUser,'/professional-details/<int:id>')

@@ -1,5 +1,4 @@
 export default {
-  props: ["id"],
   template: `
     <div>
       <div v-if="currentService!=null">
@@ -174,6 +173,8 @@ export default {
         this.modal.hide();
       }
     },
-    viewProfessionalDetails(prof) {},
+    viewProfessionalDetails(prof) {
+      this.$router.push('/provider-profile/' + prof.id)
+    },
   },
 };

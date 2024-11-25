@@ -86,8 +86,9 @@ const routes = [
     meta: { requiresLogin: true, role: "user" },
   },
   {
-    path: "/provider-profile",
+    path: "/provider-profile/:id",
     component: ProviderProfile,
+    props: true,
     meta: { requiresLogin: true, role: "user" },
   },
 ];
