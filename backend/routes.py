@@ -2,16 +2,17 @@ from flask import current_app as app, jsonify, render_template,  request, send_f
 from flask_security import auth_required, verify_password, hash_password
 from backend.models import db,User,Serviceproviders,Customers
 import os
+from datetime import datetime
 datastore = app.security.datastore
-
+cache=app.cache
 @app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
 
-@app.get('/protected')
-@auth_required('token')
-def protected():
-    return '<h1> only accessible by auth user</h1>'
+@app.route('/cache')
+@cache.cached(timeout=5)
+def test():
+    return {"time": str(datetime.now())}
 
 @app.route('/login', methods=['POST'])
 def login():

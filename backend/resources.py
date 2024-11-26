@@ -1,11 +1,13 @@
 from datetime import datetime
-from flask import jsonify, request
+from flask import jsonify, request,current_app as app
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_security import auth_required, current_user
 from backend.models import Services,User ,Role, db,Serviceproviders,Customers,ServiceRequests,Ratings
 
 
 api = Api(prefix='/api')
+
+cache=app.cache
 
 service_fields={
     'id':fields.Integer,
@@ -60,6 +62,7 @@ request_fields={
 }
 class Service(Resource):
     @marshal_with(service_fields)
+    @cache.cached(key_prefix="services_list")
     def get(self):
         services=Services.query.all()
         return services
@@ -73,6 +76,8 @@ class Service(Resource):
         service=Services(name=name, description=desc,base_price=base_price)
         db.session.add(service)
         db.session.commit()
+        cache.delete("services_list")
+
         return jsonify({'message' : 'blog created'})
     
     @auth_required('token')
@@ -85,6 +90,7 @@ class Service(Resource):
         service=Services.query.get(service_id)
         db.session.delete(service)
         db.session.commit()
+        cache.delete("services_list")
 
         return {"message": "Service deleted successfully"}, 200
 
