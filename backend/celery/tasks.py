@@ -1,0 +1,18 @@
+from celery import shared_task
+import flask_excel
+from backend.models import Services
+
+
+@shared_task(bind = True, ignore_result = False)
+def create_service_csv(self):
+    resource = Services.query.all()
+
+    task_id = self.request.id
+    filename = f'service_data_{task_id}.csv'
+    column_names = [column.name for column in Services.__table__.columns]
+    csv_out = flask_excel.make_response_from_query_sets(resource, column_names = column_names, file_type='csv' )
+
+    with open(f'./backend/celery/user_downloads/{filename}', 'wb') as file:
+        file.write(csv_out.data)
+    
+    return filename

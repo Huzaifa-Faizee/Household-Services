@@ -2,6 +2,7 @@ export default {
   template: `
   <div>
   <h1>View Services</h1>
+    <button class="btn btn-info" @click="createCsv">Get Data</button>
     <table>
         <thead>
             <tr>
@@ -96,6 +97,29 @@ export default {
       this.name = null;
       this.desc = null;
       this.base_price = null;
+    },
+    async createCsv() {
+      const res = await fetch(location.origin + '/create-service-csv',{
+        headers: {
+          "Authentication-Token": this.$store.state.auth_token,
+        },
+      });
+      const task_id = (await res.json()).task_id
+
+      const interval = setInterval(async() => {
+        console.log("Hello");
+        
+          const res = await fetch(`${location.origin}/get-service-csv/${task_id}`,{
+            headers: {
+              // "Authentication-Token": this.$store.state.auth_token,
+            },
+          })
+          if (res.ok){
+              console.log('data is ready')
+              window.open(`${location.origin}/get-service-csv/${task_id}`)
+              clearInterval(interval)
+          }
+      }, 100)
     },
   },
 };

@@ -1,18 +1,18 @@
-from flask import current_app as app, jsonify, render_template,  request, send_from_directory
+from flask import current_app as app, jsonify, render_template,  request, send_file, send_from_directory
 from flask_security import auth_required, verify_password, hash_password
 from backend.models import db,User,Serviceproviders,Customers
 import os
 from datetime import datetime
+from celery.result import AsyncResult
+from backend.celery.tasks import create_service_csv
+
 datastore = app.security.datastore
 cache=app.cache
 @app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
 
-@app.route('/cache')
-@cache.cached(timeout=5)
-def test():
-    return {"time": str(datetime.now())}
+# Login & Register Functions
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -103,6 +103,23 @@ def registerProfessional():
     except:
         db.session.rollback()
         return jsonify({"message" : "error creating user"}), 400
+
+# Backend CSV jobs
+
+@app.route('/create-service-csv')
+@auth_required('token')
+def createServiceCSV():
+    task = create_service_csv.delay()
+    return {'task_id' : task.id}, 200
+
+@app.route('/get-service-csv/<id>')
+def getServiceCSV(id):
+    result = AsyncResult(id)
+
+    if result.ready():
+        return send_file(f'./backend/celery/user_downloads/{result.result}'), 200
+    else:
+        return {'message' : 'task not ready'}, 405
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
