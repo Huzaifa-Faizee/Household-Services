@@ -1,7 +1,9 @@
 export default {
   template: `
     <div>
-        <table>
+      <h1>Users</h1>
+      <button class="btn btn-info" @click="createCsv">Get Data</button>
+        <table> 
             <thead>
                 <tr>
                     <th>Sr No</th>
@@ -63,6 +65,23 @@ export default {
         console.log(data);
         this.getUsers();
       }
+    },
+    async createCsv() {
+      const res = await fetch(location.origin + '/create-customer-csv',{
+        headers: {
+          "Authentication-Token": this.$store.state.auth_token,
+        },
+      });
+      const task_id = (await res.json()).task_id
+
+      const interval = setInterval(async() => {
+          const res = await fetch(`${location.origin}/get-customer-csv/${task_id}`)
+          if (res.ok){
+              console.log('data is ready')
+              window.open(`${location.origin}/get-customer-csv/${task_id}`)
+              clearInterval(interval)
+          }
+      }, 100)
     },
   },
 };

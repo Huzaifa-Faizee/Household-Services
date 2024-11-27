@@ -2,6 +2,7 @@ export default {
   template: `
   <div>
     <h1>Professionals</h1>
+    <button class="btn btn-info" @click="createCsv">Get Data</button>
     <h4>New Requests</h4>
     <table>
         <thead>
@@ -156,6 +157,23 @@ export default {
         this.initialiseVariables();
         this.getProfessionalData();
       }
+    },
+    async createCsv() {
+      const res = await fetch(location.origin + '/create-professional-csv',{
+        headers: {
+          "Authentication-Token": this.$store.state.auth_token,
+        },
+      });
+      const task_id = (await res.json()).task_id
+
+      const interval = setInterval(async() => {
+          const res = await fetch(`${location.origin}/get-professional-csv/${task_id}`)
+          if (res.ok){
+              console.log('data is ready')
+              window.open(`${location.origin}/get-professional-csv/${task_id}`)
+              clearInterval(interval)
+          }
+      }, 100)
     },
   },
 };

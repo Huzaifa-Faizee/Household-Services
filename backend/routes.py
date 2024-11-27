@@ -4,7 +4,7 @@ from backend.models import db,User,Serviceproviders,Customers
 import os
 from datetime import datetime
 from celery.result import AsyncResult
-from backend.celery.tasks import create_service_csv
+from backend.celery.tasks import create_professionals_csv, create_request_csv, create_service_csv,create_customer_csv
 
 datastore = app.security.datastore
 cache=app.cache
@@ -121,6 +121,52 @@ def getServiceCSV(id):
     else:
         return {'message' : 'task not ready'}, 405
 
+@app.route('/create-customer-csv')
+@auth_required('token')
+def createUserCSV():
+    task = create_customer_csv.delay()
+    return {'task_id' : task.id}, 200
+
+@app.route('/get-customer-csv/<id>')
+def getUserCSV(id):
+    result = AsyncResult(id)
+
+    if result.ready():
+        return send_file(f'./backend/celery/user_downloads/{result.result}'), 200
+    else:
+        return {'message' : 'task not ready'}, 405
+    
+@app.route('/create-professional-csv')
+@auth_required('token')
+def createProfessionalsCSV():
+    task = create_professionals_csv.delay()
+    return {'task_id' : task.id}, 200
+
+@app.route('/get-professional-csv/<id>')
+def getProfessionalsCSV(id):
+    result = AsyncResult(id)
+
+    if result.ready():
+        return send_file(f'./backend/celery/user_downloads/{result.result}'), 200
+    else:
+        return {'message' : 'task not ready'}, 405
+    
+@app.route('/create-request-csv')
+@auth_required('token')
+def createRequestCSV():
+    task = create_request_csv.delay()
+    return {'task_id' : task.id}, 200
+
+@app.route('/get-request-csv/<id>')
+def getRequestCSV(id):
+    result = AsyncResult(id)
+
+    if result.ready():
+        return send_file(f'./backend/celery/user_downloads/{result.result}'), 200
+    else:
+        return {'message' : 'task not ready'}, 405
+
+#Miscellaneous functions
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory('uploads', filename)

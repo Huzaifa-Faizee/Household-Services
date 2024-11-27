@@ -218,6 +218,14 @@ class RequestsForUser(Resource):
 
 api.add_resource(RequestsForUser,'/user-requests/<int:user_id>')
 
+class RequestsForAdmin(Resource):
+     @marshal_with(request_fields)
+     @auth_required('token')
+     def get(self):
+          return ServiceRequests.query.all()
+
+api.add_resource(RequestsForAdmin,'/all-requests')
+
 class ProfessionalDetailsForUser(Resource):
      @marshal_with(professional_fields)
      @auth_required('token')
