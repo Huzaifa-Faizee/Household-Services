@@ -1,9 +1,11 @@
 from datetime import datetime
-from flask import jsonify, request,current_app as app
-from flask_restful import Api, Resource, fields, marshal_with
+import os
+from flask import jsonify, request,current_app as app, send_file
+from flask_restful import Api, Resource, fields, marshal, marshal_with
 from flask_security import auth_required, current_user
-from backend.models import Services,User ,Role, db,Serviceproviders,Customers,ServiceRequests,Ratings
-
+from sqlalchemy import func
+from backend.models import Services,User ,Role, UserRoles, db,Serviceproviders,Customers,ServiceRequests,Ratings
+import matplotlib.pyplot as plt
 
 api = Api(prefix='/api')
 
@@ -96,7 +98,7 @@ class Service(Resource):
 
 api.add_resource(Service,'/services')
 
-class Users(Resource):
+class UsersData(Resource):
     @marshal_with(user_fields)
     @auth_required('token')
     def get(self):
@@ -110,7 +112,7 @@ class Users(Resource):
          customer.status=data.get('status')
          db.session.commit()
     
-api.add_resource(Users,'/users')
+api.add_resource(UsersData,'/users')
 
 # This class deals with admin actions
 class Professionals(Resource):
@@ -232,3 +234,124 @@ class ProfessionalDetailsForUser(Resource):
      def get(self, id):
           return Serviceproviders.query.filter_by(id=id).first()
 api.add_resource(ProfessionalDetailsForUser,'/professional-details/<int:id>')
+
+class AdminSearch(Resource):
+     @auth_required('token')
+     def get(self, search_value):
+         search_value="%"+search_value+"%"
+         users = User.query.join(User.roles).filter(Role.name == 'user',User.name.like(search_value)).all()
+         professionals = Serviceproviders.query.filter(Serviceproviders.business_name.like(search_value)).all()
+         users_1 = [marshal(user, user_fields) for user in users]
+         professionals_1 = [marshal(professional, professional_fields) for professional in professionals]
+         print(users_1,professionals_1)   
+         return {'users':users_1,"professionals":professionals_1},200            
+api.add_resource(AdminSearch,'/admin-search/<search_value>')
+
+class UserSearch(Resource):
+     @auth_required('token')
+     def get(self, search_value):
+         search_value="%"+search_value+"%"
+         services = Services.query.filter(Services.name.like(search_value)).all()
+         professionals = Serviceproviders.query.filter(Serviceproviders.status == "accepted",Serviceproviders.business_name.like(search_value)).all()
+         services_1 = [marshal(service, service_fields) for service in services]
+         professionals_1 = [marshal(professional, professional_fields) for professional in professionals]
+         return {'services':services_1,"professionals":professionals_1},200
+     
+api.add_resource(UserSearch,'/user-search/<search_value>')
+
+class AdminStats(Resource):
+     @auth_required('token')
+     def get(self):
+            bar_data = db.session.query(ServiceRequests.status,func.count(ServiceRequests.id).label('count')).group_by(ServiceRequests.status).all()
+            bar_labels = [status for status, count in bar_data]
+            bar_values = [count for status, count in bar_data]
+            plt.figure(figsize=(10, 6))
+            plt.bar(bar_labels, bar_values, color=['#f87979', '#7fc97f', '#beaed4', '#fdc086'])
+            plt.xlabel("Status")
+            plt.ylabel("Number of Requests")
+            plt.title("Service Requests by Status")
+            plt.tight_layout()
+            bar_chart_path = "./backend/charts/admin_service_requests_status.png"
+            os.makedirs(os.path.dirname(bar_chart_path), exist_ok=True)
+            plt.savefig(bar_chart_path)
+            plt.close()
+
+            role_data = db.session.query(Role.name,func.count(UserRoles.id).label('count')).join(UserRoles, Role.id == UserRoles.role_id).group_by(Role.name).all()
+            pie_labels = [role for role, count in role_data]
+            pie_values = [count for role, count in role_data]
+            
+            plt.figure(figsize=(8, 8))
+            plt.pie(
+                pie_values,
+                labels=pie_labels,
+                autopct=lambda pct: AdminStats.absolute_value(pct,pie_values),
+                # autopct='%1.1f%%',
+                startangle=140,
+                colors=['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+            )
+            plt.title("Distribution of User Roles")
+            pie_chart_path = "./backend/charts/admin_roles_pie_chart.png"
+            plt.savefig(pie_chart_path)
+            plt.close()
+
+            # Return the paths (names) of the generated charts
+            return jsonify({
+                "bar_chart": os.path.basename(bar_chart_path),
+                "pie_chart": os.path.basename(pie_chart_path)
+            })
+
+     def absolute_value(val,pie_values):
+        total = sum(pie_values)
+        idx = int(val / 100.0 * len(pie_values))
+        return f"{pie_values[idx]}"
+
+            
+
+api.add_resource(AdminStats,'/admin-stats')
+
+class ProfessionalStats(Resource):
+        @auth_required('token')
+        def get(self,id):
+            print(id)
+            prof=Serviceproviders.query.filter_by(user_id=id).first()
+            bar_data = db.session.query(ServiceRequests.status,func.count(ServiceRequests.id).label('count')).filter(ServiceRequests.service_provider_id == prof.id).group_by(ServiceRequests.status).all()
+            bar_labels = [status for status, count in bar_data]
+            bar_values = [count for status, count in bar_data]
+            print(bar_labels,bar_values)
+            plt.figure(figsize=(10, 6))
+            plt.bar(bar_labels, bar_values, color=['#f87979', '#7fc97f', '#beaed4', '#fdc086'])
+            plt.xlabel("Status")
+            plt.ylabel("Number of Requests")
+            plt.title("Service Requests by Status")
+            plt.tight_layout()
+            bar_chart_path = "./backend/charts/prof_service_requests_status.png"
+            os.makedirs(os.path.dirname(bar_chart_path), exist_ok=True)
+            plt.savefig(bar_chart_path)
+            plt.close()
+            return jsonify({
+                "bar_chart": os.path.basename(bar_chart_path),
+            })
+
+api.add_resource(ProfessionalStats,'/professional-stats/<int:id>')
+class UserStats(Resource):
+        @auth_required('token')
+        def get(self,id):
+            bar_data = db.session.query(ServiceRequests.status,func.count(ServiceRequests.id).label('count')).filter(ServiceRequests.user_id == id).group_by(ServiceRequests.status).all()
+            bar_labels = [status for status, count in bar_data]
+            bar_values = [count for status, count in bar_data]
+            print(bar_labels,bar_values)
+            plt.figure(figsize=(10, 6))
+            plt.bar(bar_labels, bar_values, color=['#f87979', '#7fc97f', '#beaed4', '#fdc086'])
+            plt.xlabel("Status")
+            plt.ylabel("Number of Requests")
+            plt.title("Service Requests by Status")
+            plt.tight_layout()
+            bar_chart_path = "./backend/charts/user_service_requests_status.png"
+            os.makedirs(os.path.dirname(bar_chart_path), exist_ok=True)
+            plt.savefig(bar_chart_path)
+            plt.close()
+            return jsonify({
+                "bar_chart": os.path.basename(bar_chart_path),
+            })
+
+api.add_resource(UserStats,'/user-stats/<int:id>')

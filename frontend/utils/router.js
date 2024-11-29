@@ -11,10 +11,13 @@ import Register from "../pages/Register.js";
 import RegisterProfessional from "../pages/RegisterProfessional.js";
 import ProfessionalHome from "../pages/service-provider/ProfessionalHome.js";
 import ProfessionalRequests from "../pages/service-provider/ProfessionalRequests.js";
+import ProfessionalSummary from "../pages/service-provider/ProfessionalSummary.js";
 import IndividualService from "../pages/user/IndividualService.js";
 import ProviderProfile from "../pages/user/ProviderProfile.js";
 import UserHome from "../pages/user/UserHome.js";
 import UserRequests from "../pages/user/UserRequests.js";
+import UserSearch from "../pages/user/UserSearch.js";
+import UserSummary from "../pages/user/UserSummary.js";
 import store from "./store.js";
 const routes = [
   { path: "/", component: Home },
@@ -68,6 +71,11 @@ const routes = [
     component: ProfessionalRequests,
     meta: { requiresLogin: true, role: "service_provider" },
   },
+  {
+    path: "/professional-summary",
+    component: ProfessionalSummary,
+    meta: { requiresLogin: true, role: "service_provider" },
+  },
 
   // User Routes
   {
@@ -83,6 +91,16 @@ const routes = [
   {
     path: "/user-requests",
     component: UserRequests,
+    meta: { requiresLogin: true, role: "user" },
+  },
+  {
+    path: "/user-search",
+    component: UserSearch,
+    meta: { requiresLogin: true, role: "user" },
+  },
+  {
+    path: "/user-summary",
+    component: UserSummary,
     meta: { requiresLogin: true, role: "user" },
   },
   {
