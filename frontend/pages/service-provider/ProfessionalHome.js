@@ -8,7 +8,23 @@ export default {
         <input type="text" placeholder="Enter service Description" v-model="service_description" />
         <input type="number" placeholder="Enter Price" v-model="price" />
         <button class="btn btn-warning" @click="updateProfessionalDetails">Update</button>
-        Reviews , Profile etc to be kept here
+        <h4>Reviews</h4>
+        <table>
+          <thead>
+              <tr>
+                  <th>Sr No</th>
+                  <th>Customer</th>
+                  <th>Review</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr v-for="(rev,index) in reviews">
+                  <td>{{index+1}}</td>
+                  <td>{{rev.user.name}}</td>
+                  <td>{{rev.review}}</td>
+              </tr>
+          </tbody>
+        </table>
     </div>
     `,
   data() {
@@ -18,6 +34,7 @@ export default {
       address: null,
       service_description: null,
       price: null,
+      reviews: [],
     };
   },
   mounted() {
@@ -43,6 +60,7 @@ export default {
         this.address = data.address;
         this.service_description = data.service_description;
         this.price = data.price;
+        this.reviews = data.ratings;
       }
     },
     async updateProfessionalDetails() {

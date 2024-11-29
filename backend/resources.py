@@ -95,7 +95,21 @@ class Service(Resource):
         cache.delete("services_list")
 
         return {"message": "Service deleted successfully"}, 200
-
+    
+    @auth_required('token')
+    def put(self):
+         data=request.get_json()
+         service_id=data.get('id')
+         service=Services.query.get(service_id)
+         if not service_id:
+            return {"message":"Service Id not been provided"},400
+         service.name=data.get('name')
+         service.description=data.get('desc')
+         service.base_price=data.get('base_price')
+         db.session.commit()
+         cache.delete("services_list")
+         return {"message": "Service Updated successfully"}, 200
+    
 api.add_resource(Service,'/services')
 
 class UsersData(Resource):

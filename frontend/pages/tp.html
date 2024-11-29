@@ -142,3 +142,19 @@
 
 <img src="" alt="">
 
+<table>
+    <thead>
+        <tr>
+            <th>Sr No</th>
+            <th>Customer</th>
+            <th>Review</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="(rev,index) in reviews">
+            <td>{{index+1}}</td>
+            <td>{{rev.user.name}}</td>
+            <td>{{rev.review}}</td>
+        </tr>
+    </tbody>
+</table>

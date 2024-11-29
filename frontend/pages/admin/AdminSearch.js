@@ -20,6 +20,7 @@ export default {
                         <th>Service Selected</th>
                         <th>Document</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,10 @@ export default {
                                 View Document
                             </a></td>
                         <td> {{prof.status}} </td>
+                        <td>
+                          <button class="btn btn-success" v-if="prof.status=='rejected' || prof.status=='waiting'" @click="changeStatus(prof,'accepted')">Accept</button>
+                          <button class="btn btn-danger" v-if="prof.status=='accepted' || prof.status=='waiting'" @click="changeStatus(prof,'rejected')">Reject</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -48,6 +53,7 @@ export default {
                         <th>Sr No</th>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,6 +61,8 @@ export default {
                         <td>{{index+1}}</td>
                         <td>{{user.name}}</td>
                         <td>{{user.email}}</td>
+                        <td v-if="user.customer[0].status=='active'"><button class="btn btn-danger" @click="changeUserStatus(user.id,'blocked')">Block</button></td>
+                        <td v-if="user.customer[0].status=='blocked'"><button class="btn btn-primary" @click="changeUserStatus(user.id,'active')">Un-Block</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -82,6 +90,45 @@ export default {
         let data = await res.json();
         this.users=data.users
         this.professionals=data.professionals
+      }
+    },
+    async changeUserStatus(userId, status) {
+      const user_data = {
+        user_id: userId,
+        status: status,
+      };
+      console.log("User Data", user_data);
+
+      const res = await fetch(location.origin + "/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authentication-Token": this.$store.state.auth_token,
+        },
+        body: JSON.stringify(user_data),
+      });
+      if (res.ok) {
+        let data = await res.json();
+        console.log(data);
+        this.search();
+      }
+    },
+    async changeStatus(professional, status) {
+      let dataToPass = {
+        id: professional.id,
+        status: status,
+      };
+      const res = await fetch(location.origin + "/api/professionals", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authentication-Token": this.$store.state.auth_token,
+        },
+        body: JSON.stringify(dataToPass),
+      });
+      if (res.ok) {
+        let data = await res.json();
+        this.search();
       }
     },
   },

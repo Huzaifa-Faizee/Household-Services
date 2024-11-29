@@ -9,7 +9,7 @@ export default {
                     <th>Sr No</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Active</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>

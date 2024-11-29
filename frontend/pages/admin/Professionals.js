@@ -129,7 +129,6 @@ export default {
 
         this.professionals.forEach((prof) => {
           if ((prof.status == "waiting")) {
-            prof;
             this.pending_professionals.push(prof);
           } else if ((prof.status == "accepted")) {
             this.accepted_professionals.push(prof);
