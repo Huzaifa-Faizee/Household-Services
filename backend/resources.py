@@ -369,3 +369,15 @@ class UserStats(Resource):
             })
 
 api.add_resource(UserStats,'/user-stats/<int:id>')
+
+class AdminHomeData(Resource):
+     @auth_required('token')
+     def get(self):
+          users = User.query.join(User.roles).filter(Role.name == 'user').count()
+          professionals = User.query.join(User.roles).filter(Role.name == 'service_provider').count()
+          active_requests=ServiceRequests.query.filter(ServiceRequests.status=='accepted').count()
+          closed_requests=ServiceRequests.query.filter(ServiceRequests.status=='closed').count()
+          print(users,professionals,active_requests,closed_requests)
+          return jsonify({"users":users,"professionals":professionals,"active_requests":active_requests,"closed_requests":closed_requests})
+     
+api.add_resource(AdminHomeData,'/admin-home-data')

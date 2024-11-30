@@ -1,14 +1,24 @@
 export default {
   props: ["id"],
   template: `
-  <div>
+  <div class="page-body">
     <div v-if="professional!=null">
-        <h3>{{professional.business_name}}</h3>
-        <p>{{professional.experience}}</p>
-        <p>{{professional.address}}</p>
-        
-        <h4>{{professional.service_description}}</h4>
-        <h5>{{professional.price}}</h5>
+        <div class="page-heading">{{professional.business_name}}</div>
+        <div class="container">
+            <div class="row">
+                <div class="col-4 description">
+                    Experience: {{professional.experience}}</p>
+                </div>
+                <div class="col-4 description">
+                    Address: {{professional.address}}
+                </div>
+                <div class="col-4 description">
+                    Price: {{professional.price}}
+                </div>
+            </div>
+        </div>
+
+        <div class="description">{{professional.service_description}}</div>
 
         <div class="sub-heading">Reviews</div>
         <table v-if="professional.ratings.length>0">
@@ -31,7 +41,7 @@ export default {
             No Reviews Yet
         </div>
     </div>
-  </div>
+</div>
   `,
   data() {
     return {

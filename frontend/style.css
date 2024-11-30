@@ -2,6 +2,7 @@
 @import url("./css/buttons.css");
 @import url("./css/table.css");
 @import url("./css/commonpage.css");
+@import url("./css/adminHome.css");
 
 :root {
   --main-color: #00a7a2;
