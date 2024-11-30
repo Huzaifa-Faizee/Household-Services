@@ -1,94 +1,104 @@
 export default {
   template: `
-    <div>
-      <div v-if="currentService!=null">
-        <h4>Service Details: {{currentService.name}}</h4>
-        <p>{{currentService.description}}</p>
-      </div>
-      <table>
-        <thead>
-            <tr>
-                <th>Sr. No</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Service</th>
-                <th>Description</th>
-                <th>Experience</th>
-                <th>Price</th>
-                <th>Book</th>
-                <th>View</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(prof,index) in professionals">
-                <td> {{index+1}} </td>
-                <td> {{prof.business_name}} </td>
-                <td> {{prof.address}} </td>
-                <td> {{prof.service.name}} </td>
-                <td> {{prof.service_description}} </td>
-                <td> {{prof.experience}} </td>
-                <td> {{prof.price}} </td>
-                <td> <button class="btn btn-success" @click="openModal(prof)">Book</button> </td>
-                <td> <button class="btn btn-warning" @click="viewProfessionalDetails(prof)">View Details</button> </td>
-            </tr>
-        </tbody>
-      </table>
-
-      <table>
-        <thead>
-            <tr>
-                <th>Sr No</th>
-                <th>Service</th>
-                <th>Contact</th>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Address</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(req,index) in requests">
-                <td>{{index+1}}</td>
-                <td>{{req.service.name}}</td>
-                <td>{{req.service_provider.user.email}}</td>
-                <td>{{req.service_provider.business_name}}</td>
-                <td>{{req.date_requested}}</td>
-                <td>{{req.user_address}}</td>
-                <td>{{req.status}}</td>
-            </tr>
-        </tbody>
-      </table>
-            <!-- Modal for Booking -->
-            <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
+  <div class="page-body">
+  <div v-if="currentService!=null">
+      <div class="page-heading">Service Details: {{currentService.name}}</div>
+      <div class="description">{{currentService.description}}</div>
+  </div>
+  <div class="sub-heading">Professionals</div>
+  <table v-if="professionals.length>0">
+      <thead>
+          <tr>
+              <th>Sr. No</th>
+              <th>Name</th>
+              <th>Address</th>
+              <th>Service</th>
+              <th>Description</th>
+              <th>Experience</th>
+              <th>Price</th>
+              <th>Book</th>
+              <th>View</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(prof,index) in professionals">
+              <td> {{index+1}} </td>
+              <td> {{prof.business_name}} </td>
+              <td> {{prof.address}} </td>
+              <td> {{prof.service.name}} </td>
+              <td> {{prof.service_description}} </td>
+              <td> {{prof.experience}} </td>
+              <td> {{prof.price}} </td>
+              <td> <button class="btn btn-success" @click="openModal(prof)">Book</button> </td>
+              <td> <button class="btn btn-warning" @click="viewProfessionalDetails(prof)">View Details</button> </td>
+          </tr>
+      </tbody>
+  </table>
+  <div class="message" v-if="professionals.length==0">
+      No professionals have opted this service
+  </div>
+  <div class="sub-heading">
+      Service History
+  </div>
+  <table v-if="requests.length>0">
+      <thead>
+          <tr>
+              <th>Sr No</th>
+              <th>Service</th>
+              <th>Contact</th>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Address</th>
+              <th>Status</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(req,index) in requests">
+              <td>{{index+1}}</td>
+              <td>{{req.service.name}}</td>
+              <td>{{req.service_provider.user.email}}</td>
+              <td>{{req.service_provider.business_name}}</td>
+              <td>{{req.date_requested}}</td>
+              <td>{{req.user_address}}</td>
+              <td>{{req.status}}</td>
+          </tr>
+      </tbody>
+  </table>
+  <div class="message" v-if="requests.length==0">
+      You have not booked this service yet
+  </div>
+  <!-- Modal for Booking -->
+  <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
                   <h5 class="modal-title" id="bookingModalLabel">Book Professional</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+              </div>
+              <div class="modal-body">
                   <div v-if="alertMessage" class="alert" :class="alertClass" role="alert">
                       {{ alertMessage }}
                   </div>
                   <form>
-                    <div class="mb-3">
-                      <label for="bookingDate" class="form-label">Date</label>
-                      <input type="date" v-model="booking_date" id="bookingDate" class="form-control" required />
-                    </div>
-                    <div class="mb-3">
-                      <label for="bookingAddress" class="form-label">Address</label>
-                      <input type="text" v-model="booking_address" id="bookingAddress" class="form-control" required />
-                    </div>
+                      <div class="mb-3">
+                          <label for="bookingDate" class="form-label">Date</label>
+                          <input type="date" v-model="booking_date" id="bookingDate" class="form-control" required />
+                      </div>
+                      <div class="mb-3">
+                          <label for="bookingAddress" class="form-label">Address</label>
+                          <input type="text" v-model="booking_address" id="bookingAddress" class="form-control"
+                              required />
+                      </div>
                   </form>
-                </div>
-                <div class="modal-footer">
+              </div>
+              <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                   <button type="submit" class="btn btn-primary" @click="submitBooking">Submit</button>
-                </div>
               </div>
-            </div>
           </div>
-    </div>
+      </div>
+  </div>
+</div>
     `,
   data() {
     return {
@@ -179,7 +189,7 @@ export default {
           this.modal.hide();
         }
       } else {
-        this.setAlert("Please fill all fields","alert-warning")
+        this.setAlert("Please fill all fields", "alert-warning");
       }
     },
     viewProfessionalDetails(prof) {
