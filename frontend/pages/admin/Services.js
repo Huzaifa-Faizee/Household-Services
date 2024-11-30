@@ -1,11 +1,12 @@
 export default {
   template: `
-  <div>
-  <h1>View Services</h1>
-    <button class="btn btn-info" @click="createCsv">Export Data</button>
-    <button class="btn btn-success" @click="openAddModal">Add</button>
-
-    <table>
+  <div class="page-body">
+    <div class="page-heading">View Services</div>
+    <div class="buttons">
+    <button class="btn btn-success" @click="openAddModal">Add Service</button>
+    <button class="button-58" @click="createCsv">Export Data</button>
+    </div>
+    <table v-if="services.length>0">
         <thead>
             <tr>
                 <th>Name</th>
@@ -17,78 +18,85 @@ export default {
         </thead>
         <tbody>
             <tr v-for="service in services">
-            <td>{{service.name}}</td>
-            <td>{{service.description}}</td>
-            <td>{{service.base_price}}</td>
-            <td><button @click="openEditModal(service)">Edit</button></td>
-            <td><button @click="deleteService(service)">Delete</button></td>
+                <td>{{service.name}}</td>
+                <td>{{service.description}}</td>
+                <td>{{service.base_price}}</td>
+                <td><button class="btn btn-warning" @click="openEditModal(service)">Edit</button></td>
+                <td><button class="btn btn-danger" @click="deleteService(service)">Delete</button></td>
             </tr>
         </tbody>
     </table>
-     <!-- Add Modal-->
-     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-     <div class="modal-dialog">
-       <div class="modal-content">
-         <div class="modal-header">
-           <h5 class="modal-title" id="addModalLabel">Add Service</h5>
-           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-           <form>
-             <div class="mb-3">
-               <label for="name" class="form-label">Name:</label>
-               <input type="text" v-model="name" id="name" class="form-control" required />
-             </div>
-             <div class="mb-3">
-               <label for="desc" class="form-label">Description:</label>
-               <textarea type="text" v-model="desc" id="desc" class="form-control" required />
-             </div>
-             <div class="mb-3">
-               <label for="base-price" class="form-label">Base Price:</label>
-               <input type="number" v-model="base_price" id="base-price" class="form-control" required />
-             </div>
-           </form>
-         </div>
-         <div class="modal-footer">
-           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-           <button type="submit" class="btn btn-primary" @click="addNewService">Add</button>
-         </div>
-       </div>
-     </div>
-   </div>
-     <!-- Edit Modal-->
-     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-     <div class="modal-dialog">
-       <div class="modal-content">
-         <div class="modal-header">
-           <h5 class="modal-title" id="editModalLabel">Edit Service</h5>
-           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-           <form>
-             <div class="mb-3">
-               <label for="name" class="form-label">Name:</label>
-               <input type="text" v-model="edit_name" id="name" class="form-control" required />
-             </div>
-             <div class="mb-3">
-               <label for="desc" class="form-label">Description:</label>
-               <textarea type="text" v-model="edit_desc" id="desc" class="form-control" required />
-             </div>
-             <div class="mb-3">
-               <label for="base-price" class="form-label">Base Price:</label>
-               <input type="number" v-model="edit_base_price" id="base-price" class="form-control" required />
-             </div>
-           </form>
-         </div>
-         <div class="modal-footer">
-           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-           <button type="submit" class="btn btn-primary" @click="editService">Edit</button>
-         </div>
-       </div>
-     </div>
-   </div>
+    <div class="message" v-if="services.length==0">
+        No Services added
+    </div>
+    <!-- Add Modal-->
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Add Service</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div v-if="alertMessage" class="alert" :class="alertClass" role="alert">
+                      {{ alertMessage }}
+                    </div>
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name:</label>
+                            <input type="text" v-model="name" id="name" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="desc" class="form-label">Description:</label>
+                            <textarea type="text" v-model="desc" id="desc" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="base-price" class="form-label">Base Price:</label>
+                            <input type="number" v-model="base_price" id="base-price" class="form-control" required />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" @click="addNewService">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Modal-->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Service</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name:</label>
+                            <input type="text" v-model="edit_name" id="name" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="desc" class="form-label">Description:</label>
+                            <textarea type="text" v-model="edit_desc" id="desc" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="base-price" class="form-label">Base Price:</label>
+                            <input type="number" v-model="edit_base_price" id="base-price" class="form-control"
+                                required />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" @click="editService">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  </div>
+</div>
     `,
   data() {
     return {
@@ -102,6 +110,8 @@ export default {
       services: [],
       addModal: null,
       editModal: null,
+      alertMessage: null,
+      alertClass: null,
     };
   },
   mounted() {
@@ -125,25 +135,29 @@ export default {
       this.addModal.show();
     },
     async addNewService() {
-      let serviceData = {
-        name: this.name,
-        desc: this.desc,
-        base_price: this.base_price,
-      };
-      const res = await fetch(location.origin + "/api/services", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authentication-Token": this.$store.state.auth_token,
-        },
-        body: JSON.stringify(serviceData),
-      });
-      if (res.ok) {
-        let data = await res.json();
-        console.log(data);
-        this.getServices();
-        this.initialiseVariables();
-        this.addModal.hide();
+      if (this.name != null && this.desc != null && this.base_price != null) {
+        let serviceData = {
+          name: this.name,
+          desc: this.desc,
+          base_price: this.base_price,
+        };
+        const res = await fetch(location.origin + "/api/services", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authentication-Token": this.$store.state.auth_token,
+          },
+          body: JSON.stringify(serviceData),
+        });
+        if (res.ok) {
+          let data = await res.json();
+          console.log(data);
+          this.getServices();
+          this.initialiseVariables();
+          this.addModal.hide();
+        }
+      } else {
+        this.setAlert("Please fill all fields","alert-warning")
       }
     },
     openEditModal(service) {
@@ -225,6 +239,15 @@ export default {
           clearInterval(interval);
         }
       }, 100);
+    },
+    setAlert(message, alertClass) {
+      this.alertMessage = message;
+      this.alertClass = alertClass;
+      // Automatically dismiss the alert after 5 seconds
+      setTimeout(() => {
+        this.alertMessage = null;
+        this.alertClass = null;
+      }, 5000);
     },
   },
 };

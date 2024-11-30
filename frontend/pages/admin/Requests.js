@@ -1,9 +1,11 @@
 export default {
   template: `
-  <div>
-    <h1>Requests</h1>
-    <button class="btn btn-info" @click="createCsv">Export Data</button>
-    <table>
+  <div class="page-body">
+    <div class="page-heading">Requests</div>
+    <div class="buttons">
+        <button class="button-58" @click="createCsv">Export Data</button>
+    </div>
+    <table v-if="requests.length>0">
         <thead>
             <tr>
                 <th>Sr No</th>
@@ -30,12 +32,15 @@ export default {
                 <td>{{req.status}}</td>
             </tr>
         </tbody>
-    </table>    
-  </div>  
+    </table>
+    <div class="message" v-if="requests.length==0">
+        No requests Yet
+    </div>
+</div>
     `,
   data() {
     return {
-      requests: null,
+      requests: [],
     };
   },
   mounted() {
@@ -43,16 +48,16 @@ export default {
   },
   methods: {
     async getRequests() {
-        const res = await fetch(location.origin + "/api/all-requests", {
-            headers: {
-              "Authentication-Token": this.$store.state.auth_token,
-            },
-          });
-          if (res.ok) {
-            let data = await res.json();
-            this.requests = data;
-            console.log(this.requests);
-          }
+      const res = await fetch(location.origin + "/api/all-requests", {
+        headers: {
+          "Authentication-Token": this.$store.state.auth_token,
+        },
+      });
+      if (res.ok) {
+        let data = await res.json();
+        this.requests = data;
+        console.log(this.requests);
+      }
     },
     async createCsv() {
       const res = await fetch(location.origin + "/create-request-csv", {

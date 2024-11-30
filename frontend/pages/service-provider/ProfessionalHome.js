@@ -1,31 +1,73 @@
 export default {
   template: `
-    <div>
-        <h4>Profile Details</h4>
-        <input type="text" placeholder="Enter Business Name" v-model="business_name" />
-        <input type="text" placeholder="Enter Experience" v-model="experience" />
-        <input type="text" placeholder="Enter Address" v-model="address" />
-        <input type="text" placeholder="Enter service Description" v-model="service_description" />
-        <input type="number" placeholder="Enter Price" v-model="price" />
-        <button class="btn btn-warning" @click="updateProfessionalDetails">Update</button>
-        <h4>Reviews</h4>
-        <table>
-          <thead>
-              <tr>
-                  <th>Sr No</th>
-                  <th>Customer</th>
-                  <th>Review</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr v-for="(rev,index) in reviews">
-                  <td>{{index+1}}</td>
-                  <td>{{rev.user.name}}</td>
-                  <td>{{rev.review}}</td>
-              </tr>
-          </tbody>
-        </table>
-    </div>
+  <div class="page-body">
+  <div class="sub-heading">Profile Details</div>
+  <div class="container">
+      <div class="row">
+          <div class="col-6">
+              <div class="mb-3">
+                  <label for="business_name" class="form-label">Business Name:</label>
+                  <input type="text" class="form-control" id="business_name" placeholder="Enter Business Name" v-model="business_name" />
+              </div>
+          </div>
+          <div class="col-6">
+              <div class="mb-3">
+                  <label for="experience" class="form-label">Experience:</label>
+                  <input type="text" class="form-control" id="experience" placeholder="Enter Experience" v-model="experience" />
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-6">
+              <div class="mb-3">
+                  <label for="address" class="form-label">Address:</label>
+                  <textarea type="text" class="form-control" id="address" placeholder="Enter Address" v-model="address"></textarea>
+              </div>
+          </div>
+          <div class="col-6">
+              <div class="mb-3">
+                  <label for="service_description" class="form-label">Service Description:</label>
+                  <textarea type="text" class="form-control" id="service_description" placeholder="Enter service Description"
+                      v-model="service_description"></textarea>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-6">
+              <div class="mb-3">
+                  <label for="price" class="form-label">Price:</label>
+                  <input type="number" class="form-control" id="price" placeholder="Enter Price" v-model="price" />
+              </div>
+          </div>
+          <div class="col-6 update-button">
+              <button class="button-58" @click="updateProfessionalDetails">Update</button>
+          </div>
+      </div>
+  </div>
+  <div v-if="alertMessage" class="alert" :class="alertClass" role="alert">
+          {{ alertMessage }}
+  </div>
+  <div class="sub-heading">Reviews</div>
+  <table v-if="reviews.length>0">
+      <thead>
+          <tr>
+              <th>Sr No</th>
+              <th>Customer</th>
+              <th>Review</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(rev,index) in reviews">
+              <td>{{index+1}}</td>
+              <td>{{rev.user.name}}</td>
+              <td>{{rev.review}}</td>
+          </tr>
+      </tbody>
+  </table>
+  <div class="message" v-if="reviews.length==0">
+      No Reviews Yet
+  </div>
+</div>
     `,
   data() {
     return {
@@ -35,6 +77,8 @@ export default {
       service_description: null,
       price: null,
       reviews: [],
+      alertMessage: null,
+      alertClass: null,
     };
   },
   mounted() {
@@ -86,9 +130,18 @@ export default {
       );
       if (res.ok) {
         let data = await res.json();
-        console.log("Successfully Changes Updated");
+        this.setAlert("Changes Updated Successfully","alert-success");
         this.getProfessionalDetails();
       }
+    },
+    setAlert(message, alertClass) {
+      this.alertMessage = message;
+      this.alertClass = alertClass;
+      // Automatically dismiss the alert after 5 seconds
+      setTimeout(() => {
+        this.alertMessage = null;
+        this.alertClass = null;
+      }, 5000);
     },
   },
 };

@@ -1,9 +1,12 @@
 export default {
     template: `
-      <div>
-          <h1>Summary</h1>
-          <img :src="'/chart/'+charts['bar_chart']" alt="">
+    <div class="page-body">
+      <div class="page-heading">Summary</div>
+      <div class="sub-heading">Requests</div>
+      <div class="chart-image">
+          <img class="chart" :src="'/chart/'+charts['bar_chart']" alt="">
       </div>
+    </div>
       `,
     data() {
       return {

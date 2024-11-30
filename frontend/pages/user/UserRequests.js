@@ -20,7 +20,7 @@ export default {
                     <td>{{index+1}}</td>
                     <td>{{req.service.name}}</td>
                     <td>{{req.service_provider.user.email}}</td>
-                    <td>{{req.service_provider.name}}</td>
+                    <td>{{req.service_provider.business_name}}</td>
                     <td>{{req.date_requested}}</td>
                     <td>{{req.user_address}}</td>
                     <td><button class="btn btn-warning" @click="openModal(req)">Close</button></td>
@@ -45,7 +45,7 @@ export default {
                     <td>{{index+1}}</td>
                     <td>{{req.service.name}}</td>
                     <td>{{req.service_provider.user.email}}</td>
-                    <td>{{req.service_provider.name}}</td>
+                    <td>{{req.service_provider.business_name}}</td>
                     <td>{{req.date_requested}}</td>
                     <td>{{req.user_address}}</td>
                     <td>{{req.status}}</td>
@@ -70,7 +70,7 @@ export default {
                     <td>{{index+1}}</td>
                     <td>{{req.service.name}}</td>
                     <td>{{req.service_provider.user.email}}</td>
-                    <td>{{req.service_provider.name}}</td>
+                    <td>{{req.service_provider.business_name}}</td>
                     <td>{{req.date_requested}}</td>
                     <td>{{req.user_address}}</td>
                     <td>{{req.status}}</td>

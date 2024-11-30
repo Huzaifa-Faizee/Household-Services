@@ -1,5 +1,4 @@
 .page-body {
-  background-color: var(--page-color);
   padding: 0.5rem;
 }
 .page-heading {
@@ -11,11 +10,11 @@
   font-size: 2rem;
 }
 .sub-heading {
-    font-family: "Playfair Display", serif;
-    font-weight: 500;
-    text-align: left;
-    font-size: 1.5rem;
-    color: var(--font-color);
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+  text-align: left;
+  font-size: 1.5rem;
+  color: var(--font-color);
 }
 .buttons {
   display: flex;
@@ -24,4 +23,26 @@
 
 .buttons button {
   margin-right: 5px;
+}
+.message {
+  text-align: center;
+  color: var(--message-color);
+  font-size: 1.2rem;
+}
+.search-button,
+.update-button {
+  display: flex;
+  align-items: center;
+}
+.chart-image {
+  text-align: center;
+  width: 100%;
+  max-width: 800px;
+}
+.chart {
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 80%;
 }

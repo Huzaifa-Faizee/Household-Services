@@ -1,110 +1,122 @@
 export default {
   template: `
-    <div>
-        <h1>Professional Requests</h1>
-        <h4>New Requests</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr No</th>
-                    <th>Service</th>
-                    <th>Customer Name</th>
-                    <th>Customer Contact</th>
-                    <th>Customer Address</th>
-                    <th>Date</th>
-                    <th>Accept</th>
-                    <th>Reject</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(req,index) in new_requests">
-                    <td>{{index+1}}</td>
-                    <td>{{req.service.name}}</td>
-                    <td>{{req.user.name}}</td>
-                    <td>{{req.user.email}}</td>
-                    <td>{{req.user_address}}</td>
-                    <td>{{req.date_requested}}</td>
-                    <td><button class="btn btn-success" @click="updateStatus(req.id,'accepted')">Accept</button></td>
-                    <td><button class="btn btn-danger" @click="updateStatus(req.id,'rejected')">Reject</button></td>
-                </tr>
-            </tbody>
-        </table>
-        <h4>Closed Requests</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr No</th>
-                    <th>Service</th>
-                    <th>Customer Name</th>
-                    <th>Customer Contact</th>
-                    <th>Customer Address</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(req,index) in closed_requests">
-                    <td>{{index+1}}</td>
-                    <td>{{req.service.name}}</td>
-                    <td>{{req.user.name}}</td>
-                    <td>{{req.user.email}}</td>
-                    <td>{{req.user_address}}</td>
-                    <td>{{req.date_requested}}</td>
-                    <td>{{req.status}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <h4>Accepted Requests</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr No</th>
-                    <th>Service</th>
-                    <th>Customer Name</th>
-                    <th>Customer Contact</th>
-                    <th>Customer Address</th>
-                    <th>Date</th>
-                    <th>Reject</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(req,index) in accepted_requests">
-                    <td>{{index+1}}</td>
-                    <td>{{req.service.name}}</td>
-                    <td>{{req.user.name}}</td>
-                    <td>{{req.user.email}}</td>
-                    <td>{{req.user_address}}</td>
-                    <td>{{req.date_requested}}</td>
-                    <td><button class="btn btn-danger" @click="updateStatus(req.id,'rejected')">Reject</button></td>
-                </tr>
-            </tbody>
-        </table>
-        <h4>Rejected Requests</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr No</th>
-                    <th>Service</th>
-                    <th>Customer Name</th>
-                    <th>Customer Contact</th>
-                    <th>Customer Address</th>
-                    <th>Date</th>
-                    <th>Accept</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(req,index) in rejected_requests">
-                    <td>{{index+1}}</td>
-                    <td>{{req.service.name}}</td>
-                    <td>{{req.user.name}}</td>
-                    <td>{{req.user.email}}</td>
-                    <td>{{req.user_address}}</td>
-                    <td>{{req.date_requested}}</td>
-                    <td><button class="btn btn-success" @click="updateStatus(req.id,'accepted')">Accept</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="page-body">
+  <div class="page-heading">Professional Requests</div>
+  <div class="sub-heading">New Requests</div>
+  <table v-if="new_requests.length>0">
+      <thead>
+          <tr>
+              <th>Sr No</th>
+              <th>Service</th>
+              <th>Customer Name</th>
+              <th>Customer Contact</th>
+              <th>Customer Address</th>
+              <th>Date</th>
+              <th>Accept</th>
+              <th>Reject</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(req,index) in new_requests">
+              <td>{{index+1}}</td>
+              <td>{{req.service.name}}</td>
+              <td>{{req.user.name}}</td>
+              <td>{{req.user.email}}</td>
+              <td>{{req.user_address}}</td>
+              <td>{{req.date_requested}}</td>
+              <td><button class="btn btn-success" @click="updateStatus(req.id,'accepted')">Accept</button></td>
+              <td><button class="btn btn-danger" @click="updateStatus(req.id,'rejected')">Reject</button></td>
+          </tr>
+      </tbody>
+  </table>
+  <div v-if="new_requests.length==0" class="message">
+      No Requests Here
+  </div>
+  <div class="sub-heading">Closed Requests</div>
+  <table v-if="closed_requests.length>0">
+      <thead>
+          <tr>
+              <th>Sr No</th>
+              <th>Service</th>
+              <th>Customer Name</th>
+              <th>Customer Contact</th>
+              <th>Customer Address</th>
+              <th>Date</th>
+              <th>Status</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(req,index) in closed_requests">
+              <td>{{index+1}}</td>
+              <td>{{req.service.name}}</td>
+              <td>{{req.user.name}}</td>
+              <td>{{req.user.email}}</td>
+              <td>{{req.user_address}}</td>
+              <td>{{req.date_requested}}</td>
+              <td>{{req.status}}</td>
+          </tr>
+      </tbody>
+  </table>
+  <div v-if="closed_requests.length==0" class="message">
+      No Requests Here
+  </div>
+  <div class="sub-heading">Accepted Requests</div>
+  <table v-if="accepted_requests.length>0">
+      <thead>
+          <tr>
+              <th>Sr No</th>
+              <th>Service</th>
+              <th>Customer Name</th>
+              <th>Customer Contact</th>
+              <th>Customer Address</th>
+              <th>Date</th>
+              <th>Reject</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(req,index) in accepted_requests">
+              <td>{{index+1}}</td>
+              <td>{{req.service.name}}</td>
+              <td>{{req.user.name}}</td>
+              <td>{{req.user.email}}</td>
+              <td>{{req.user_address}}</td>
+              <td>{{req.date_requested}}</td>
+              <td><button class="btn btn-danger" @click="updateStatus(req.id,'rejected')">Reject</button></td>
+          </tr>
+      </tbody>
+  </table>
+  <div v-if="accepted_requests.length==0" class="message">
+      No Requests Here
+  </div>
+  <div class="sub-heading">Rejected Requests</div>
+  <table v-if="rejected_requests.length>0">
+      <thead>
+          <tr>
+              <th>Sr No</th>
+              <th>Service</th>
+              <th>Customer Name</th>
+              <th>Customer Contact</th>
+              <th>Customer Address</th>
+              <th>Date</th>
+              <th>Accept</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(req,index) in rejected_requests">
+              <td>{{index+1}}</td>
+              <td>{{req.service.name}}</td>
+              <td>{{req.user.name}}</td>
+              <td>{{req.user.email}}</td>
+              <td>{{req.user_address}}</td>
+              <td>{{req.date_requested}}</td>
+              <td><button class="btn btn-success" @click="updateStatus(req.id,'accepted')">Accept</button></td>
+          </tr>
+      </tbody>
+  </table>
+  <div v-if="rejected_requests.length==0" class="message">
+      No Requests Here
+  </div>
+</div>
     `,
   data() {
     return {

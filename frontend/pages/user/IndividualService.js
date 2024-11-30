@@ -51,7 +51,7 @@ export default {
                 <td>{{index+1}}</td>
                 <td>{{req.service.name}}</td>
                 <td>{{req.service_provider.user.email}}</td>
-                <td>{{req.service_provider.name}}</td>
+                <td>{{req.service_provider.business_name}}</td>
                 <td>{{req.date_requested}}</td>
                 <td>{{req.user_address}}</td>
                 <td>{{req.status}}</td>
@@ -67,6 +67,9 @@ export default {
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                  <div v-if="alertMessage" class="alert" :class="alertClass" role="alert">
+                      {{ alertMessage }}
+                  </div>
                   <form>
                     <div class="mb-3">
                       <label for="bookingDate" class="form-label">Date</label>
@@ -96,6 +99,8 @@ export default {
       booking_date: null,
       booking_address: null,
       modal: null,
+      alertMessage: null,
+      alertClass: null,
     };
   },
   mounted() {
@@ -143,38 +148,51 @@ export default {
       this.modal.show();
     },
     async submitBooking() {
-      console.log(
-        "submit clicked",
-        this.currentProfessional,
-        this.booking_address,
-        this.booking_date
-      );
-      const submitData = {
-        user_id: this.$store.state.user_id,
-        service_provider_id: this.currentProfessional.id,
-        service_id: this.currentService.id,
-        date_requested: this.booking_date,
-        user_address: this.booking_address,
-      };
-      const res = await fetch(location.origin + "/api/requests", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authentication-Token": this.$store.state.auth_token,
-        },
-        body: JSON.stringify(submitData),
-      });
-      if (res.ok) {
-        console.log("Saved");
-        this.currentProfessional = null;
-        this.booking_address = null;
-        this.booking_date = null;
-        this.getServiceHistory();
-        this.modal.hide();
+      if (this.booking_date != null && this.booking_address != null) {
+        console.log(
+          "submit clicked",
+          this.currentProfessional,
+          this.booking_address,
+          this.booking_date
+        );
+        const submitData = {
+          user_id: this.$store.state.user_id,
+          service_provider_id: this.currentProfessional.id,
+          service_id: this.currentService.id,
+          date_requested: this.booking_date,
+          user_address: this.booking_address,
+        };
+        const res = await fetch(location.origin + "/api/requests", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authentication-Token": this.$store.state.auth_token,
+          },
+          body: JSON.stringify(submitData),
+        });
+        if (res.ok) {
+          console.log("Saved");
+          this.currentProfessional = null;
+          this.booking_address = null;
+          this.booking_date = null;
+          this.getServiceHistory();
+          this.modal.hide();
+        }
+      } else {
+        this.setAlert("Please fill all fields","alert-warning")
       }
     },
     viewProfessionalDetails(prof) {
-      this.$router.push('/provider-profile/' + prof.id)
+      this.$router.push("/provider-profile/" + prof.id);
+    },
+    setAlert(message, alertClass) {
+      this.alertMessage = message;
+      this.alertClass = alertClass;
+      // Automatically dismiss the alert after 5 seconds
+      setTimeout(() => {
+        this.alertMessage = null;
+        this.alertClass = null;
+      }, 5000);
     },
   },
 };
