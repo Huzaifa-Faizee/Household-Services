@@ -2,7 +2,7 @@ export default {
   template: `
     <div>
       <h1>Users</h1>
-      <button class="btn btn-info" @click="createCsv">Get Data</button>
+      <button class="btn btn-info" @click="createCsv">Export Data</button>
         <table> 
             <thead>
                 <tr>

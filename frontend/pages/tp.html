@@ -1,160 +1,99 @@
-<!-- <table>
-    <thead>
-        <tr>
-            <th>Sr No</th>
-            <th>Service</th>
-            <th>Customer Name</th>
-            <th>Customer Contact</th>
-            <th>Customer Address</th>
-            <th>Date</th>
-            <th>Accept</th>
-            <th>Reject</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="(req,index) in requests">
-            <td>{{index+1}}</td>
-            <td>{{req.service.name}}</td>
-            <td>{{req.user.name}}</td>
-            <td>{{req.user.email}}</td>
-            <td>{{req.user_address}}</td>
-            <td>{{req.date_requested}}</td>
-            <td><button class="btn btn-success">Accept</button></td>
-            <td><button class="btn btn-danger">Reject</button></td>
-        </tr>
-    </tbody>
-</table> -->
-<!-- <h4>Active Requests</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr No</th>
-                    <th>Service</th>
-                    <th>Contact</th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Address</th>
-                    <th>Close</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(req,index) in active_requests">
-                    <td>{{index+1}}</td>
-                    <td>{{req.service.name}}</td>
-                    <td>{{req.service_provider.user.email}}</td>
-                    <td>{{req.service_provider.name}}</td>
-                    <td>{{req.date_requested}}</td>
-                    <td>{{req.user_address}}</td>
-                    <td><button class="btn btn-warning">Close</button></td>
-                </tr>
-            </tbody>
-        </table>
-        <h4>Waiting Requests</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr No</th>
-                    <th>Service</th>
-                    <th>Contact</th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Address</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(req,index) in waiting_requests">
-                    <td>{{index+1}}</td>
-                    <td>{{req.service.name}}</td>
-                    <td>{{req.service_provider.user.email}}</td>
-                    <td>{{req.service_provider.name}}</td>
-                    <td>{{req.date_requested}}</td>
-                    <td>{{req.user_address}}</td>
-                    <td>{{req.status}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <h4>Other Requests</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr No</th>
-                    <th>Service</th>
-                    <th>Contact</th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Address</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(req,index) in other_requests">
-                    <td>{{index+1}}</td>
-                    <td>{{req.service.name}}</td>
-                    <td>{{req.service_provider.user.email}}</td>
-                    <td>{{req.service_provider.name}}</td>
-                    <td>{{req.date_requested}}</td>
-                    <td>{{req.user_address}}</td>
-                    <td>{{req.status}}</td>
-                </tr>
-            </tbody>
-        </table> -->
-
-<h3>{{professional.business_name}}</h3>
-<p>{{professional.experience}}</p>
-<p>{{professional.address}}</p>
-
-<h4>{{professional.service_description}}</h4>
-<h5>{{professional.price}}</h5>
-
-<ul>
-    <li v-for="review in professional.ratings"></li>
-</ul>
-
-<table>
-    <thead>
-        <tr>
-            <th>Sr No</th>
-            <th>Service</th>
-            <th>Customer Name</th>
-            <th>Customer Contact</th>
-            <th>Customer Address</th>
-            <th>Business Name</th>
-            <th>Date</th>
-            <th>Price</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="(req,index) in requests">
-            <td>{{index+1}}</td>
-            <td>{{req.service.name}}</td>
-            <td>{{req.user.name}}</td>
-            <td>{{req.user.email}}</td>
-            <td>{{req.user_address}}</td>
-            <td>{{req.service_provider.business_name}}</td>
-            <td>{{req.date_requested}}</td>
-            <td>{{req.service_provider.price}}</td>
-            <td>{{req.status}}</td>
-        </tr>
-    </tbody>
-</table>
-
-<img src="" alt="">
-
-<table>
-    <thead>
-        <tr>
-            <th>Sr No</th>
-            <th>Customer</th>
-            <th>Review</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="(rev,index) in reviews">
-            <td>{{index+1}}</td>
-            <td>{{rev.user.name}}</td>
-            <td>{{rev.review}}</td>
-        </tr>
-    </tbody>
-</table>
+<div class="page-body">
+    <div class="page-heading">Professionals</div>
+    <div class="buttons">
+        <button class="button-58" @click="createCsv">Export Data</button>
+    </div>
+    <div class="sub-heading">New Requests</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Sr No</th>
+                <th>Business Name</th>
+                <th>Address</th>
+                <th>Experience</th>
+                <th>Created Date</th>
+                <th>Owner Name</th>
+                <th>Owner Email</th>
+                <th>Service Selected</th>
+                <th>Document</th>
+                <th>Accept</th>
+                <th>Reject</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(prof,index) in pending_professionals">
+                <td>{{index+1}}</td>
+                <td>{{prof.business_name}}</td>
+                <td>{{prof.address}}</td>
+                <td>{{prof.experience}}</td>
+                <td>{{prof.date_created}}</td>
+                <td>{{prof.user.name}}</td>
+                <td>{{prof.user.email}}</td>
+                <td>{{prof.service.name}}</td>
+                <td><a :href="'/uploads/' + prof.uploaded_file" target="_blank">
+                        View Document
+                    </a></td>
+                <td><button class="btn btn-success" @click="changeStatus(prof,'accepted')">Accept</button></td>
+                <td><button class="btn btn-danger" @click="changeStatus(prof,'rejected')">Reject</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="sub-heading">Accepted/Active Professionals</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Sr No</th>
+                <th>Business Name</th>
+                <th>Address</th>
+                <th>Experience</th>
+                <th>Created Date</th>
+                <th>Owner Name</th>
+                <th>Owner Email</th>
+                <th>Service Selected</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(prof,index) in accepted_professionals">
+                <td>{{index+1}}</td>
+                <td>{{prof.business_name}}</td>
+                <td>{{prof.address}}</td>
+                <td>{{prof.experience}}</td>
+                <td>{{prof.date_created}}</td>
+                <td>{{prof.user.name}}</td>
+                <td>{{prof.user.email}}</td>
+                <td>{{prof.service.name}}</td>
+                <td><button class="btn btn-danger" @click="changeStatus(prof,'rejected')">Disable</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="sub-heading">Rejected Requests</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Sr No</th>
+                <th>Business Name</th>
+                <th>Address</th>
+                <th>Experience</th>
+                <th>Created Date</th>
+                <th>Owner Name</th>
+                <th>Owner Email</th>
+                <th>Service Selected</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(prof,index) in rejected_professionals">
+                <td>{{index+1}}</td>
+                <td>{{prof.business_name}}</td>
+                <td>{{prof.address}}</td>
+                <td>{{prof.experience}}</td>
+                <td>{{prof.date_created}}</td>
+                <td>{{prof.user.name}}</td>
+                <td>{{prof.user.email}}</td>
+                <td>{{prof.service.name}}</td>
+                <td><button class="btn btn-success" @click="changeStatus(prof,'accepted')">Accept</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

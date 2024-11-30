@@ -2,7 +2,7 @@ export default {
   template: `
   <div>
   <h1>View Services</h1>
-    <button class="btn btn-info" @click="createCsv">Get Data</button>
+    <button class="btn btn-info" @click="createCsv">Export Data</button>
     <button class="btn btn-success" @click="openAddModal">Add</button>
 
     <table>

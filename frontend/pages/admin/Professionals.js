@@ -1,102 +1,104 @@
 export default {
   template: `
-  <div>
-    <h1>Professionals</h1>
-    <button class="btn btn-info" @click="createCsv">Get Data</button>
-    <h4>New Requests</h4>
-    <table>
-        <thead>
-            <tr>
-                <th>Sr No</th>
-                <th>Business Name</th>
-                <th>Address</th>
-                <th>Experience</th>
-                <th>Created Date</th>
-                <th>Owner Name</th>
-                <th>Owner Email</th>
-                <th>Service Selected</th>
-                <th>Document</th>
-                <th>Accept</th>
-                <th>Reject</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(prof,index) in pending_professionals">
-            <td>{{index+1}}</td>
-            <td>{{prof.business_name}}</td>
-            <td>{{prof.address}}</td>
-            <td>{{prof.experience}}</td>
-            <td>{{prof.date_created}}</td>
-            <td>{{prof.user.name}}</td>
-            <td>{{prof.user.email}}</td>
-            <td>{{prof.service.name}}</td>
-            <td><a :href="'/uploads/' + prof.uploaded_file" target="_blank">
-            View Document
-          </a></td>
-            <td><button class="btn btn-success" @click="changeStatus(prof,'accepted')">Accept</button></td>
-            <td><button class="btn btn-danger" @click="changeStatus(prof,'rejected')">Reject</button></td>
-            </tr>
-        </tbody>
-    </table>
-    <h4>Accepted/Active Professionals</h4>
-    <table>
-        <thead>
-            <tr>
-                <th>Sr No</th>
-                <th>Business Name</th>
-                <th>Address</th>
-                <th>Experience</th>
-                <th>Created Date</th>
-                <th>Owner Name</th>
-                <th>Owner Email</th>
-                <th>Service Selected</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(prof,index) in accepted_professionals">
-            <td>{{index+1}}</td>
-            <td>{{prof.business_name}}</td>
-            <td>{{prof.address}}</td>
-            <td>{{prof.experience}}</td>
-            <td>{{prof.date_created}}</td>
-            <td>{{prof.user.name}}</td>
-            <td>{{prof.user.email}}</td>
-            <td>{{prof.service.name}}</td>
-            <td><button class="btn btn-danger" @click="changeStatus(prof,'rejected')">Disable</button></td>
-            </tr>
-        </tbody>
-    </table>
-    <h4>Rejected Requests</h4>
-    <table>
-        <thead>
-            <tr>
-                <th>Sr No</th>
-                <th>Business Name</th>
-                <th>Address</th>
-                <th>Experience</th>
-                <th>Created Date</th>
-                <th>Owner Name</th>
-                <th>Owner Email</th>
-                <th>Service Selected</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(prof,index) in rejected_professionals">
-            <td>{{index+1}}</td>
-            <td>{{prof.business_name}}</td>
-            <td>{{prof.address}}</td>
-            <td>{{prof.experience}}</td>
-            <td>{{prof.date_created}}</td>
-            <td>{{prof.user.name}}</td>
-            <td>{{prof.user.email}}</td>
-            <td>{{prof.service.name}}</td>
-            <td><button class="btn btn-success" @click="changeStatus(prof,'accepted')">Accept</button></td>
-            </tr>
-        </tbody>
-    </table>
+  <div class="page-body">
+  <div class="page-heading">Professionals</div>
+  <div class="buttons">
+      <button class="button-58" @click="createCsv">Export Data</button>
   </div>
+  <div class="sub-heading">New Requests</div>
+  <table>
+      <thead>
+          <tr>
+              <th>Sr No</th>
+              <th>Business Name</th>
+              <th>Address</th>
+              <th>Experience</th>
+              <th>Created Date</th>
+              <th>Owner Name</th>
+              <th>Owner Email</th>
+              <th>Service Selected</th>
+              <th>Document</th>
+              <th>Accept</th>
+              <th>Reject</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(prof,index) in pending_professionals">
+              <td>{{index+1}}</td>
+              <td>{{prof.business_name}}</td>
+              <td>{{prof.address}}</td>
+              <td>{{prof.experience}}</td>
+              <td>{{prof.date_created}}</td>
+              <td>{{prof.user.name}}</td>
+              <td>{{prof.user.email}}</td>
+              <td>{{prof.service.name}}</td>
+              <td><a :href="'/uploads/' + prof.uploaded_file" target="_blank">
+                      View Document
+                  </a></td>
+              <td><button class="btn btn-success" @click="changeStatus(prof,'accepted')">Accept</button></td>
+              <td><button class="btn btn-danger" @click="changeStatus(prof,'rejected')">Reject</button></td>
+          </tr>
+      </tbody>
+  </table>
+  <div class="sub-heading">Accepted/Active Professionals</div>
+  <table>
+      <thead>
+          <tr>
+              <th>Sr No</th>
+              <th>Business Name</th>
+              <th>Address</th>
+              <th>Experience</th>
+              <th>Created Date</th>
+              <th>Owner Name</th>
+              <th>Owner Email</th>
+              <th>Service Selected</th>
+              <th>Action</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(prof,index) in accepted_professionals">
+              <td>{{index+1}}</td>
+              <td>{{prof.business_name}}</td>
+              <td>{{prof.address}}</td>
+              <td>{{prof.experience}}</td>
+              <td>{{prof.date_created}}</td>
+              <td>{{prof.user.name}}</td>
+              <td>{{prof.user.email}}</td>
+              <td>{{prof.service.name}}</td>
+              <td><button class="btn btn-danger" @click="changeStatus(prof,'rejected')">Disable</button></td>
+          </tr>
+      </tbody>
+  </table>
+  <div class="sub-heading">Rejected Requests</div>
+  <table>
+      <thead>
+          <tr>
+              <th>Sr No</th>
+              <th>Business Name</th>
+              <th>Address</th>
+              <th>Experience</th>
+              <th>Created Date</th>
+              <th>Owner Name</th>
+              <th>Owner Email</th>
+              <th>Service Selected</th>
+              <th>Action</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr v-for="(prof,index) in rejected_professionals">
+              <td>{{index+1}}</td>
+              <td>{{prof.business_name}}</td>
+              <td>{{prof.address}}</td>
+              <td>{{prof.experience}}</td>
+              <td>{{prof.date_created}}</td>
+              <td>{{prof.user.name}}</td>
+              <td>{{prof.user.email}}</td>
+              <td>{{prof.service.name}}</td>
+              <td><button class="btn btn-success" @click="changeStatus(prof,'accepted')">Accept</button></td>
+          </tr>
+      </tbody>
+  </table>
+</div>
     `,
   data() {
     return {
