@@ -9,10 +9,7 @@ SENDER_EMAIL = 'admin@mail.com'
 SENDER_PASSWORD = ''
 
 def send_email(to, subject, content):
-
-    print(to, subject, content)
     msg = MIMEMultipart()
-    # msg = MIMEMultipart('alternative')
     msg['To'] = to
     msg['Subject'] = subject
     msg['From'] = SENDER_EMAIL

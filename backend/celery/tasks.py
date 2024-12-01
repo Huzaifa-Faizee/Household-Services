@@ -61,6 +61,17 @@ def create_request_csv(self):
     return filename
 
 @shared_task(ignore_result = True)
-def email_reminder(to, subject, content):
-    print(to, subject, content)
-    send_email(to, subject, content)
+def email_reminder():
+    # print("hello Huzaifa")
+    with open("backend/celery/templates/reminder.html", 'r') as file:
+        html_content = file.read()
+    customers = User.query.join(User.roles).filter(Role.name == 'user').all()
+    professionals = User.query.join(User.roles).filter(Role.name == 'service_provider').all()
+    for user in customers:
+        send_email(user.email, 'reminder to login', html_content)
+    for prof in professionals:
+        send_email(prof.email, 'reminder to login', html_content)
+
+@shared_task(ignore_result = True)
+def monthly_report():
+    pass
