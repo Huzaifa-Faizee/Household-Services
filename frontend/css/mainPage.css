@@ -1,0 +1,76 @@
+.main-heading {
+  height: 30vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.main-heading .content .top {
+  color: var(--main-heading-color);
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+  text-align: center;
+  font-size: 2.5rem;
+}
+.main-heading .content .bottom {
+  font-size: 1.3rem;
+  color: var(--font-color);
+  font-weight: 500;
+}
+
+.features {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 1.5rem 0rem;
+}
+
+.feature-box {
+  padding: 10px;
+  text-align: center;
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: var(--main-color);
+}
+.feature-name {
+  font-weight: 500;
+}
+.counts {
+  display: flex;
+  justify-content: space-evenly;
+  background: var(--page-color);
+  height: 8rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+
+.count-label {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+.count-value {
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--main-color);
+}
+
+.services {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 3rem 0rem;
+}
+
+.service-image img {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 11px;
+}
+.service-name {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 500;
+}

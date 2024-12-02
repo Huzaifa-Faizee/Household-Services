@@ -1,15 +1,16 @@
 export default {
   template: `
-        <div>
-            <h1> User Home </h1>
-            <div class="card" style="width: 18rem;" v-for="service in services">
-                <div class="card-body">
-                    <h5 class="card-title">{{service.name}}</h5>
-                    <p class="card-text">{{service.description}}</p>
-                    <a href="#" class="btn btn-primary" @click="viewProfessional(service)">View Professionals</a>
-                </div>
-            </div>
+  <div class="page-body">
+    <div class="page-heading"> User Home </div>
+    <div class="sub-heading">What do you want to do?</div>
+    <div class="card" style="width: 18rem;" v-for="service in services">
+        <div class="card-body">
+            <h5 class="card-title">{{service.name}}</h5>
+            <p class="card-text">{{service.description}}</p>
+            <a href="#" class="btn btn-primary" @click="viewProfessional(service)">View Professionals</a>
         </div>
+    </div>
+  </div>
     `,
   data() {
     return {

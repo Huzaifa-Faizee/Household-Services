@@ -11,7 +11,7 @@ def setup_periodic_tasks(sender, **kwargs):
     # sender.add_periodic_task(10.0, email_reminder.s())
 
     # first day of every month
-    sender.add_periodic_task(crontab(hour=21, minute=12, day_of_month=1), email_reminder.s(),name='monthly_report')
+    sender.add_periodic_task(crontab(hour=16, minute=44, day_of_month=2), email_reminder.s(),name='monthly_report')
     # daily message at 6:55 pm, everyday
     # sender.add_periodic_task(crontab(hour=22, minute=37), email_reminder.s('students@gmail', 'reminder to login', '<h1> hello everyone </h1>'), name='daily reminder' )
 

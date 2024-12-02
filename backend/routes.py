@@ -175,6 +175,8 @@ def uploaded_file(filename):
 
 @app.route('/chart/<filename>')
 def chart_file(filename):
-    print(filename)
     return send_from_directory('backend/charts/', filename)
+@app.route('/images/<filename>')
+def image_file(filename):
+    return send_from_directory('uploads/images/', filename)
 
