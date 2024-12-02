@@ -120,7 +120,7 @@
     <div class="services">
         <div class="service-box">
             <div class="service-image">
-                <img src="/frontend/css/images/cleaning.jpg" alt="">
+                <img src="{{url_for('static', filename='css/images/cleaning.jpg')}}" alt="">
             </div>
             <div class="service-name">
                 Cleaning
@@ -151,4 +151,18 @@
             </div>
         </div>
     </div>
-  </div>
+</div>
+
+<div class="page-body">
+    <div class="page-heading"> User Home </div>
+    <div class="sub-heading">What do you want to do?</div>
+    <div class="services-list">
+        <div class="card" style="width: 18rem;" v-for="service in services">
+            <div class="card-body">
+                <h5 class="card-title">{{service.name}}</h5>
+                <!-- <p class="card-text">{{service.description}}</p> -->
+                <a href="#" class="btn btn-primary" @click="viewProfessional(service)">View Professionals</a>
+            </div>
+        </div>
+    </div>
+</div>

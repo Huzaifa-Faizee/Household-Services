@@ -49,12 +49,14 @@ export default {
   </div>
   <div v-if="services.length>0">
       <div class="sub-heading">Services</div>
-      <div class="card" style="width: 18rem;" v-for="service in services">
+      <div class="services-list">
+      <div class="card" v-for="service in services">
           <div class="card-body">
               <h5 class="card-title">{{service.name}}</h5>
               <p class="card-text">{{service.description}}</p>
               <a href="#" class="btn btn-primary" @click="viewProfessional(service)">View Professionals</a>
           </div>
+      </div>
       </div>
   </div>
 
