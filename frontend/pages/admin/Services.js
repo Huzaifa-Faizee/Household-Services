@@ -19,7 +19,7 @@ export default {
         <tbody>
             <tr v-for="service in services">
                 <td>{{service.name}}</td>
-                <td>{{service.description}}</td>
+                <td class="table-service-desc">{{service.description}}</td>
                 <td>{{service.base_price}}</td>
                 <td><button class="btn btn-warning" @click="openEditModal(service)">Edit</button></td>
                 <td><button class="btn btn-danger" @click="deleteService(service)">Delete</button></td>

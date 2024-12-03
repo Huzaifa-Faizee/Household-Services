@@ -48,7 +48,7 @@ export default {
                     <td><a :href="'/uploads/' + prof.uploaded_file" target="_blank">
                             View Document
                         </a></td>
-                    <td> {{prof.status}} </td>
+                    <td class="capitalize"> {{prof.status}} </td>
                     <td>
                         <button class="btn btn-success" v-if="prof.status=='rejected' || prof.status=='waiting'"
                             @click="changeStatus(prof,'accepted')">Accept</button>

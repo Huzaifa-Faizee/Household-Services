@@ -29,7 +29,7 @@ export default {
                 <td>{{req.service_provider.business_name}}</td>
                 <td>{{req.date_requested}}</td>
                 <td>{{req.service_provider.price}}</td>
-                <td>{{req.status}}</td>
+                <td class="capitalize">{{req.status}}</td>
             </tr>
         </tbody>
     </table>

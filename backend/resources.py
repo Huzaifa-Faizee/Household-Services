@@ -293,7 +293,6 @@ class AdminStats(Resource):
             role_data = db.session.query(Role.name,func.count(UserRoles.id).label('count')).join(UserRoles, Role.id == UserRoles.role_id).group_by(Role.name).all()
             pie_labels = [role for role, count in role_data]
             pie_values = [count for role, count in role_data]
-            
             plt.figure(figsize=(8, 8))
             plt.pie(
                 pie_values,

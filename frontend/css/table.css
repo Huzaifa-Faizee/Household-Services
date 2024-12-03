@@ -31,3 +31,7 @@ tr:nth-child(even) {
 tr:hover {
   background-color: #f1f9ff;
 }
+
+.table-service-desc{
+  width: 40%;
+}

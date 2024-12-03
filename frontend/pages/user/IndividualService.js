@@ -60,7 +60,7 @@ export default {
               <td>{{req.service_provider.business_name}}</td>
               <td>{{req.date_requested}}</td>
               <td>{{req.user_address}}</td>
-              <td>{{req.status}}</td>
+              <td class="capitalize">{{req.status}}</td>
           </tr>
       </tbody>
   </table>

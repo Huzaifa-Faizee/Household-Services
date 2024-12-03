@@ -53,7 +53,7 @@ export default {
               <td>{{req.user.email}}</td>
               <td>{{req.user_address}}</td>
               <td>{{req.date_requested}}</td>
-              <td>{{req.status}}</td>
+              <td class="capitalize">{{req.status}}</td>
           </tr>
       </tbody>
   </table>
