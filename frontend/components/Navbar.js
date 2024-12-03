@@ -69,15 +69,9 @@ export default {
 
                 <div class="d-flex">
                     <ul class="navbar-nav navbar-buttons">
-                        <li class="nav-item" v-if="!$store.state.loggedIn">
-                            <button class="btn btn-success" @click="login">Login</button>
-                        </li>
-                        <li class="nav-item" v-if="!$store.state.loggedIn">
-                            <button class="btn btn-warning" @click="register">Register</button>
-                        </li>
-                        <li class="nav-item" v-if="$store.state.loggedIn">
-                            <button class="btn btn-secondary" @click="logout">Logout</button>
-                        </li>
+                            <button v-if="!$store.state.loggedIn" class="btn btn-success" @click="login">Login</button>
+                            <button v-if="!$store.state.loggedIn" class="btn btn-warning" @click="register">Register</button>
+                            <button v-if="$store.state.loggedIn" class="btn btn-secondary" @click="logout">Logout</button>
                     </ul>
                 </div>
             </div>

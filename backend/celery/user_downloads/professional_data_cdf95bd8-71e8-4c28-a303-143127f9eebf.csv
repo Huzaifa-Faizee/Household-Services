@@ -1,5 +1,0 @@
-id,user_id,service_id,business_name,experience,address,uploaded_file,service_description,price,status,date_created
-1,4,1,Professional 1 Business,5 years,Pune,test1.jpg,Hello we provide excellent services,10000,accepted,2024-11-24
-2,5,2,Professional 2 Business,5 years,Pune,test1.jpg,We Provide Services,2000,accepted,2024-11-24
-3,6,3,business new,6 years,PUNE,test3.jpg,We Provide Services,5000,accepted,2024-11-29
-4,9,2,a,a,a,test2.jpg,We Provide Services,2000,waiting,2024-11-30
